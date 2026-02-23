@@ -22,8 +22,8 @@ class InvestigatingBehavior(BaseBehavior):
     COOLDOWN = 90.0
 
     # Investigating satisfies curiosity but adds stimulation
-    STAT_EFFECTS = {"curiosity": -1.0, "stimulation": 0.5}
-    COMPLETION_BONUS = {"curiosity": -20, "stimulation": 10, "fulfillment": 5}
+    STAT_EFFECTS = {"curiosity": -1.0}
+    COMPLETION_BONUS = {"curiosity": -20, "fulfillment": 5}
 
     def __init__(self, character):
         """Initialize the investigating behavior.

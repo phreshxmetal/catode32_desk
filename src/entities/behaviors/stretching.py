@@ -22,8 +22,8 @@ class StretchingBehavior(BaseBehavior):
     COOLDOWN = 45.0
 
     # Stretching improves comfort and vigor
-    STAT_EFFECTS = {"comfort": 1.5, "vigor": 0.5}
-    COMPLETION_BONUS = {"comfort": 15, "vigor": 5}
+    STAT_EFFECTS = {"comfort": 1.5}
+    COMPLETION_BONUS = {"comfort": 15}
 
     def __init__(self, character):
         """Initialize the stretching behavior.

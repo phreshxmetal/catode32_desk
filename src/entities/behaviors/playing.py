@@ -8,7 +8,7 @@ from ui import draw_bubble
 TRIGGERS = {
     "toy": {
         "bubble": "exclaim",
-        "stats": {"playfulness": 15, "stimulation": 1, "energy": -5, "focus": -1},
+        "stats": {"playfulness": 15, "energy": -5, "focus": -1},
     },
     "throw_stick": {
         "bubble": "star",
@@ -36,7 +36,7 @@ class PlayingBehavior(BaseBehavior):
     COOLDOWN = 60.0
 
     # Playing costs energy but satisfies playfulness
-    STAT_EFFECTS = {"playfulness": -2.0, "energy": -0.5, "stimulation": 1.0}
+    STAT_EFFECTS = {"playfulness": -2.0, "energy": -0.5}
     COMPLETION_BONUS = {"playfulness": -25, "fulfillment": 10}
 
     def __init__(self, character):

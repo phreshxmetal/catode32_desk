@@ -16,7 +16,7 @@ VARIANTS = {
         "pose": "sitting.side.aloof",
         "bubble": "exclaim",
         "duration": 2.0,
-        "stats": {"curiosity": 10, "stimulation": 5},
+        "stats": {"curiosity": 10},
     },
 }
 
