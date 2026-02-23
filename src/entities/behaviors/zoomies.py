@@ -1,5 +1,6 @@
 """Zoomies behavior - explosive burst of chaotic energy."""
 
+import random
 from entities.behaviors.base import BaseBehavior
 
 
@@ -36,6 +37,9 @@ class ZoomiesBehavior(BaseBehavior):
         self.collapse_duration = 2.0
 
     def next(self, context):
+        if random.random() < 0.2:
+            from entities.behaviors.vocalizing import VocalizingBehavior
+            return VocalizingBehavior
         return None  # -> idle (exhausted)
 
     def start(self, on_complete=None):
