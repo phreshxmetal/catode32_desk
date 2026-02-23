@@ -76,12 +76,13 @@ class IdleBehavior(BaseBehavior):
             return None
 
         from entities.behaviors.sleeping import SleepingBehavior
+        from entities.behaviors.napping import NappingBehavior
         from entities.behaviors.playing import PlayingBehavior
         from entities.behaviors.investigating import InvestigatingBehavior
         from entities.behaviors.stretching import StretchingBehavior
 
         candidates = []
-        for cls in (SleepingBehavior, PlayingBehavior, InvestigatingBehavior, StretchingBehavior):
+        for cls in (SleepingBehavior, NappingBehavior, PlayingBehavior, InvestigatingBehavior, StretchingBehavior):
             if cls.can_trigger(context):
                 candidates.append(cls)
 

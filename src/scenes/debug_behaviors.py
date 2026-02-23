@@ -4,6 +4,7 @@ from scene import Scene
 from entities.character import CharacterEntity
 from entities.behaviors.idle import IdleBehavior
 from entities.behaviors.sleeping import SleepingBehavior
+from entities.behaviors.napping import NappingBehavior
 from entities.behaviors.stretching import StretchingBehavior
 from entities.behaviors.investigating import InvestigatingBehavior
 from entities.behaviors.playing import PlayingBehavior
@@ -18,6 +19,7 @@ from ui import Scrollbar
 BEHAVIOR_ENTRIES = [
     ("idle",         "Idle",         IdleBehavior,         {}),
     ("sleeping",     "Sleeping",     SleepingBehavior,     {}),
+    ("napping",      "Napping",      NappingBehavior,      {}),
     ("stretching",   "Stretching",   StretchingBehavior,   {}),
     ("investigating","Investigating", InvestigatingBehavior,{}),
     ("playing",      "Playing",      PlayingBehavior,      {}),
