@@ -11,6 +11,7 @@ from entities.behaviors.lounging import LoungeingBehavior
 from entities.behaviors.investigating import InvestigatingBehavior
 from entities.behaviors.observing import ObservingBehavior
 from entities.behaviors.chattering import ChatteringBehavior
+from entities.behaviors.zoomies import ZoomiesBehavior
 from entities.behaviors.playing import PlayingBehavior
 from entities.behaviors.affection import AffectionBehavior
 from entities.behaviors.attention import AttentionBehavior
@@ -30,6 +31,7 @@ BEHAVIOR_ENTRIES = [
     ("investigating","Investigating", InvestigatingBehavior,{}),
     ("observing",    "Observing",    ObservingBehavior,    {}),
     ("chattering",   "Chattering",   ChatteringBehavior,   {}),
+    ("zoomies",      "Zoomies",      ZoomiesBehavior,      {}),
     ("playing",      "Playing",      PlayingBehavior,      {}),
     ("affection",    "Affection",    AffectionBehavior,    {"variant": "pets"}),
     ("attention",    "Attention",    AttentionBehavior,    {"variant": "psst"}),
