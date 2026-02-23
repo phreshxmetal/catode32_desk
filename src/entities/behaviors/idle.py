@@ -44,14 +44,8 @@ class IdleBehavior(BaseBehavior):
     def start(self, on_complete=None):
         if self._active:
             return
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "idling"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
         self._pick_new_pose()
 
     def update(self, dt):

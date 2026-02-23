@@ -1,0 +1,60 @@
+"""Kneading biscuits behavior - rhythmic pawing when content after a stretch."""
+
+import random
+from entities.behaviors.base import BaseBehavior
+
+
+class KneadingBehavior(BaseBehavior):
+    """Pet kneads rhythmically after a satisfying stretch.
+
+    A calm, self-soothing behavior. Chains back to stretching,
+    which has a 50% chance of returning here — creating a short
+    but naturally-terminating comfort loop.
+
+    Phases:
+    1. kneading - Rhythmic pawing
+    2. settling  - Pet winds down and stills
+    """
+
+    NAME = "kneading"
+
+    TRIGGER_STAT = None  # Only reached via stretching's next(), never auto-triggered
+    PRIORITY = 50
+
+    STAT_EFFECTS = {"serenity": 0.3, "comfort": 0.2}
+    COMPLETION_BONUS = {"serenity": 5, "comfort": 3}
+
+    def __init__(self, character):
+        super().__init__(character)
+
+        self.knead_duration = 8.0
+        self.settle_duration = 1.5
+
+    def next(self, context):
+        from entities.behaviors.stretching import StretchingBehavior
+        return StretchingBehavior
+
+    def start(self, on_complete=None):
+        if self._active:
+            return
+        super().start(on_complete)
+        self._phase = "kneading"
+        self._character.set_pose("sleeping.side.sploot")
+
+    def update(self, dt):
+        if not self._active:
+            return
+
+        self._phase_timer += dt
+
+        if self._phase == "kneading":
+            self._progress = min(1.0, self._phase_timer / self.knead_duration)
+
+            if self._phase_timer >= self.knead_duration:
+                self._phase = "settling"
+                self._phase_timer = 0.0
+                self._character.set_pose("sleeping.side.modest")
+
+        elif self._phase == "settling":
+            if self._phase_timer >= self.settle_duration:
+                self.stop(completed=True)

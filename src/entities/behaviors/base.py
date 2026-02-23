@@ -113,8 +113,9 @@ class BaseBehavior:
         if self._active:
             return
 
+        print(f"Starting behavior: {self.NAME}")
+
         self._active = True
-        self._phase = "start"
         self._phase_timer = 0.0
         self._progress = 0.0
         self._pose_before = self._character.pose_name
@@ -138,6 +139,8 @@ class BaseBehavior:
         """
         if not self._active:
             return
+        
+        print(f"Stopping behavior: {self.NAME}")
 
         self._active = False
         self._phase = None

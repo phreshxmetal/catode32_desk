@@ -6,6 +6,7 @@ from entities.behaviors.idle import IdleBehavior
 from entities.behaviors.sleeping import SleepingBehavior
 from entities.behaviors.napping import NappingBehavior
 from entities.behaviors.stretching import StretchingBehavior
+from entities.behaviors.kneading import KneadingBehavior
 from entities.behaviors.investigating import InvestigatingBehavior
 from entities.behaviors.playing import PlayingBehavior
 from entities.behaviors.affection import AffectionBehavior
@@ -21,6 +22,7 @@ BEHAVIOR_ENTRIES = [
     ("sleeping",     "Sleeping",     SleepingBehavior,     {}),
     ("napping",      "Napping",      NappingBehavior,      {}),
     ("stretching",   "Stretching",   StretchingBehavior,   {}),
+    ("kneading",     "Kneading",     KneadingBehavior,     {}),
     ("investigating","Investigating", InvestigatingBehavior,{}),
     ("playing",      "Playing",      PlayingBehavior,      {}),
     ("affection",    "Affection",    AffectionBehavior,    {"variant": "pets"}),

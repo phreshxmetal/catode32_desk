@@ -44,24 +44,11 @@ class SnackingBehavior(BaseBehavior):
         self._duration = 2.0
 
     def start(self, variant=None, on_complete=None):
-        """Begin the snacking reaction.
-
-        Args:
-            variant: "snack" or "treat"
-            on_complete: Optional callback when reaction finishes.
-        """
         if self._active:
             return
-
         config = VARIANTS.get(variant, VARIANTS["snack"])
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "reacting"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
         self._bubble = config["bubble"]
         self._duration = config["duration"]
 

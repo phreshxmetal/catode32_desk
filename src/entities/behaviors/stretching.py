@@ -1,5 +1,6 @@
 """Stretching behavior for comfort and vigor."""
 
+import random
 from entities.behaviors.base import BaseBehavior
 
 
@@ -24,6 +25,12 @@ class StretchingBehavior(BaseBehavior):
     STAT_EFFECTS = {"comfort": 1.5}
     COMPLETION_BONUS = {"comfort": 15}
 
+    def next(self, context):
+        if random.random() < 0.2:
+            from entities.behaviors.kneading import KneadingBehavior
+            return KneadingBehavior
+        return None  # -> idle
+
     def __init__(self, character):
         """Initialize the stretching behavior.
 
@@ -38,21 +45,10 @@ class StretchingBehavior(BaseBehavior):
         self.relax_duration = 1.0
 
     def start(self, on_complete=None):
-        """Begin stretching.
-
-        Args:
-            on_complete: Optional callback when stretch finishes.
-        """
         if self._active:
             return
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "preparing"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
         self._character.set_pose("standing.side.neutral")
 
     def update(self, dt):

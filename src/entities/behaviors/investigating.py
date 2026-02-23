@@ -38,21 +38,10 @@ class InvestigatingBehavior(BaseBehavior):
         self.react_duration = 1.5
 
     def start(self, on_complete=None):
-        """Begin investigating.
-
-        Args:
-            on_complete: Optional callback when investigation finishes.
-        """
         if self._active:
             return
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "approaching"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
         self._character.set_pose("sitting.side.looking_down")
 
     def update(self, dt):

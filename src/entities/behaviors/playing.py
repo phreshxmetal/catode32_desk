@@ -56,23 +56,10 @@ class PlayingBehavior(BaseBehavior):
         self._bubble = None
 
     def start(self, trigger=None, on_complete=None):
-        """Begin playing.
-
-        Args:
-            trigger: Optional trigger type ("toy" or "throw_stick") for instant stats/bubble.
-            on_complete: Optional callback when play finishes.
-        """
         if self._active:
             return
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "excited"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
-        # Handle trigger-specific setup
         self._trigger_type = trigger
         if trigger and trigger in TRIGGERS:
             config = TRIGGERS[trigger]

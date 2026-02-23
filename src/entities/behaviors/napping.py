@@ -48,15 +48,9 @@ class NappingBehavior(BaseBehavior):
     def start(self, on_complete=None):
         if self._active:
             return
-
-        self._active = True
-        self._phase = "settling"
-        self._phase_timer = 0.0
-        self._progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
-
+        super().start(on_complete)
         self._nap_pose = random.choice(self.NAP_POSES)
+        self._phase = "settling"
         self._character.set_pose("sitting.side.looking_down")
 
     def update(self, dt):

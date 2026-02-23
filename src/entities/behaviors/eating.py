@@ -59,25 +59,13 @@ class EatingBehavior(BaseBehavior):
         return min(1.0, self._bowl_frame / num_frames)
 
     def start(self, bowl_sprite=None, meal_type=None, on_complete=None):
-        """Begin the eating animation sequence.
-
-        Args:
-            bowl_sprite: The food bowl sprite dict (with frames)
-            meal_type: Type of meal being eaten (e.g., "chicken", "fish")
-            on_complete: Optional callback function called when eating finishes.
-        """
         if self._active:
             return
-
-        self._active = True
+        super().start(on_complete)
         self._phase = "lowering"
-        self._phase_timer = 0.0
-        self._progress = 0.0
         self._bowl_sprite = bowl_sprite
         self._bowl_frame = 0.0
         self._bowl_y_progress = 0.0
-        self._pose_before = self._character.pose_name
-        self._on_complete = on_complete
         self._meal_type = meal_type
         self._character.set_pose("standing.side.happy")
 
