@@ -65,6 +65,15 @@ class PacingBehavior(BaseBehavior):
         if random.random() < p_vocalize:
             from entities.behaviors.vocalizing import VocalizingBehavior
             return VocalizingBehavior
+
+        # Sulk if emotionally depleted and luck doesn't favor recovery
+        if (getattr(context, 'fulfillment', 50) < 40 and
+                getattr(context, 'resilience', 50) < 50 and
+                getattr(context, 'affection', 50) < 40 and
+                random.random() < 0.5):
+            from entities.behaviors.sulking import SulkingBehavior
+            return SulkingBehavior
+
         return None  # -> idle
 
     def start(self, on_complete=None):
