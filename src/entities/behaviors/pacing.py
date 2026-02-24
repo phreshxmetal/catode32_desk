@@ -84,6 +84,15 @@ class PacingBehavior(BaseBehavior):
             from entities.behaviors.mischief import MischiefBehavior
             return MischiefBehavior
 
+        # Retreat if scared, depleted, and out of coping resources
+        if (getattr(context, 'courage', 50) < 40 and
+                getattr(context, 'affection', 50) < 40 and
+                getattr(context, 'resilience', 50) < 40 and
+                getattr(context, 'energy', 50) < 40 and
+                random.random() < 0.4):
+            from entities.behaviors.hiding import HidingBehavior
+            return HidingBehavior
+
         return None  # -> idle
 
     def start(self, on_complete=None):

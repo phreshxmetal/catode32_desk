@@ -44,6 +44,14 @@ class MischiefBehavior(BaseBehavior):
         self.satisfy_duration = 1.5
 
     def next(self, context):
+        # Retreat if the pet's nerve broke and it's now depleted
+        if (getattr(context, 'courage', 50) < 40 and
+                getattr(context, 'affection', 50) < 40 and
+                getattr(context, 'resilience', 50) < 40 and
+                getattr(context, 'energy', 50) < 40 and
+                random.random() < 0.4):
+            from entities.behaviors.hiding import HidingBehavior
+            return HidingBehavior
         from entities.behaviors.pacing import PacingBehavior
         return PacingBehavior  # -> back to pacing
 
