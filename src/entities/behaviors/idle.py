@@ -79,10 +79,11 @@ class IdleBehavior(BaseBehavior):
         from entities.behaviors.observing import ObservingBehavior
         from entities.behaviors.stretching import StretchingBehavior
         from entities.behaviors.self_grooming import SelfGroomingBehavior
+        from entities.behaviors.pacing import PacingBehavior
         from entities.behaviors.lounging import LoungeingBehavior
 
         candidates = []
-        for cls in (SleepingBehavior, NappingBehavior, ZoomiesBehavior, VocalizingBehavior, HuntingBehavior, PlayingBehavior, InvestigatingBehavior, ObservingBehavior, SelfGroomingBehavior, StretchingBehavior, LoungeingBehavior):
+        for cls in (SleepingBehavior, NappingBehavior, ZoomiesBehavior, VocalizingBehavior, HuntingBehavior, PlayingBehavior, InvestigatingBehavior, ObservingBehavior, SelfGroomingBehavior, StretchingBehavior, PacingBehavior, LoungeingBehavior):
             if cls.can_trigger(context):
                 candidates.append(cls)
 
