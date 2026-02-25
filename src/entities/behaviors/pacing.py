@@ -32,6 +32,7 @@ class PacingBehavior(BaseBehavior):
     STAT_EFFECTS = {
         "comfort": 0.2,
         "mischievousness": 0.3,
+        "patience": 0.1
     }
     COMPLETION_BONUS = {
         "comfort": 5,
@@ -40,16 +41,8 @@ class PacingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        has_need = (
-            getattr(context, 'comfort', 50) < 40 or
-            getattr(context, 'fulfillment', 50) < 40 or
-            getattr(context, 'affection', 50) < 40
-        )
-        return (
-            has_need and
-            getattr(context, 'patience', 50) < 50 and
-            getattr(context, 'serenity', 50) < 50
-        )
+        has_needs = getattr(context, 'comfort', 50) < 40 or getattr(context, 'patience', 50) < 50 or getattr(context, 'serenity', 50) < 50 
+        return has_needs and random.random() > 0.2
 
     def __init__(self, character):
         super().__init__(character)

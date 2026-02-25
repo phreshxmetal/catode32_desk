@@ -20,7 +20,7 @@ class KneadingBehavior(BaseBehavior):
 
     PRIORITY = 50
 
-    STAT_EFFECTS = {"serenity": 0.3, "comfort": 0.2}
+    STAT_EFFECTS = {"serenity": 0.3, "comfort": 0.2, "cleanliness": 0.05}
     COMPLETION_BONUS = {"serenity": 5, "comfort": 3}
 
     def __init__(self, character):

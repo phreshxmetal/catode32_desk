@@ -28,15 +28,15 @@ class IdleBehavior(BaseBehavior):
 
     PRIORITY = 100  # Lowest priority — only used as fallback
 
-    STAT_EFFECTS = {"curiosity": 0.1, "energy": -0.1, "fullness": -0.1, "affection": -0.05}
+    STAT_EFFECTS = {"curiosity": 0.1, "energy": -0.1, "fullness": -0.1, "affection": -0.05, "cleanliness": 0.02}
     COMPLETION_BONUS = {}
 
     CHECK_INTERVAL = 15.0  # How long each idle cycle runs before checking next()
 
     def __init__(self, character):
         super().__init__(character)
-        self.min_pose_duration = 10.0
-        self.max_pose_duration = 30.0
+        self.min_pose_duration = 15.0
+        self.max_pose_duration = 60.0
         self._time_until_pose_change = 0.0
         self._current_idle_pose = None
 
@@ -67,6 +67,11 @@ class IdleBehavior(BaseBehavior):
         """
         if not context:
             return None
+        
+        # Sometimes, just stay idle
+        if random.random() < 0.3:
+            print("Just staying idle")
+            return None
 
         from entities.behaviors.sleeping import SleepingBehavior
         from entities.behaviors.napping import NappingBehavior
@@ -88,6 +93,10 @@ class IdleBehavior(BaseBehavior):
 
         if not candidates:
             return None
+
+        print("Idle change priorities:")
+        for cls in sorted(candidates, key=lambda c: c.get_priority(context)):
+            print(f"  {cls.NAME}: priority={cls.get_priority(context)}")
 
         best_priority = min(cls.get_priority(context) for cls in candidates)
         top = [cls for cls in candidates if cls.get_priority(context) == best_priority]

@@ -25,7 +25,9 @@ class LoungeingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return True  # Always eligible — acts as a comfortable alternative to idle
+        if context.focus > 40 and context.serenity > 40 and random.random() > 0.15:
+            return True
+        return False
 
     def __init__(self, character):
         super().__init__(character)

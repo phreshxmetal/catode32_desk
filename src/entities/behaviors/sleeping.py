@@ -20,7 +20,7 @@ class SleepingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy < 30
+        return context.energy < 30 and random.random() > 0.1
 
     # Stat effects during sleep
     STAT_EFFECTS = {"energy": 2.0, "comfort": 0.2}

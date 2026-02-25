@@ -23,7 +23,7 @@ class ObservingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.curiosity >= 70
+        return context.curiosity >= 60 and random.random() > 0.2
 
     STAT_EFFECTS = {"curiosity": -0.5}  # Drains curiosity, but slower than investigating
     COMPLETION_BONUS = {"curiosity": -10, "fulfillment": 3}

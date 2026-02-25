@@ -47,7 +47,7 @@ class HuntingBehavior(BaseBehavior):
             getattr(context, 'playfulness', 0) > 60 and
             getattr(context, 'focus', 0) > 60 and
             getattr(context, 'curiosity', 0) > 60 and
-            getattr(context, 'independence', 0) > 60
+            getattr(context, 'independence', 0) > 50
         )
 
     def __init__(self, character):

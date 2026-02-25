@@ -23,7 +23,7 @@ class NappingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy < 45
+        return context.energy < 45 and random.random() > 0.2
 
     STAT_EFFECTS = {"energy": 1.0, "focus": 0.5}
     COMPLETION_BONUS = {"energy": 5, "focus": 5}

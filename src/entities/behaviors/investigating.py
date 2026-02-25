@@ -19,7 +19,7 @@ class InvestigatingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.curiosity >= 70
+        return context.curiosity >= 70 and random.random() > 0.2
 
     # Investigating satisfies curiosity but adds stimulation
     STAT_EFFECTS = {"curiosity": -1.0}
