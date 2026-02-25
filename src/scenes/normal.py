@@ -135,36 +135,53 @@ class NormalScene(Scene):
 
     def _build_menu_items(self):
         """Build context-aware menu items"""
-        items = [
-            MenuItem("Give pets", icon=HAND_ICON, action=("pets",)),
+
+        # Affection submenu
+        affection_items = [
+            MenuItem("Pets", icon=HAND_ICON, action=("pets",)),
+            MenuItem("Kiss", icon=HEART_ICON, action=("kiss",)),
             MenuItem("Psst psst", icon=HEART_BUBBLE_ICON, action=("psst",)),
-            MenuItem("Give kiss", icon=HEART_ICON, action=("kiss",)),
-            MenuItem("Groom", icon=HAND_ICON, action=("groom",)),
-            MenuItem("Train", icon=HAND_ICON, action=("train",)),
+            MenuItem("Groom", icon=HAND_ICON, action=("groom",))
         ]
 
-        # Meals submenu
+        # Feed submenu
         meal_items = [
             MenuItem("Chicken", icon=CHICKEN_ICON, action=("meal", "chicken")),
             MenuItem("Fish", icon=FISH_ICON, action=("meal", "fish")),
         ]
-        items.append(MenuItem("Meals", icon=MEAL_ICON, submenu=meal_items))
-
-        # Build snacks submenu from inventory
         snack_items = [
-            MenuItem(snack, icon=SNACK_ICONS.get(snack), action=("snack", snack))
-            for snack in self.context.inventory.get("snacks", [])
+            MenuItem("Treat", icon=SNACK_ICONS.get("Treat"), action=("snack", "treat")),
+            MenuItem("Kibble", icon=SNACK_ICONS.get("Kibble"), action=("snack", "kibble")),
         ]
-        if snack_items:
-            items.append(MenuItem("Give snacks", icon=KIBBLE_ICON, submenu=snack_items))
+        feed_items = [
+            MenuItem("Meals", icon=MEAL_ICON, submenu=meal_items),
+            MenuItem("Snacks", icon=KIBBLE_ICON, submenu=snack_items),
+        ]
 
-        # Build toys submenu from inventory
+        # Toys submenu
         toy_items = [
             MenuItem(toy, icon=TOY_ICONS.get(toy), action=("toy", toy))
             for toy in self.context.inventory.get("toys", [])
         ]
+
+        # Train submenu
+        train_items = [
+            MenuItem("Intelligence", icon=HAND_ICON, action=("train",)),
+            MenuItem("Behavior", icon=HAND_ICON, action=("train",)),
+            MenuItem("Patience", icon=HAND_ICON, action=("train",)),
+            MenuItem("Fitness", icon=HAND_ICON, action=("train",)),
+            MenuItem("sociability", icon=HAND_ICON, action=("train",)),
+        ]
+
+        # Build parent menu
+        items = [
+            MenuItem("Affection", icon=HEART_ICON, submenu=affection_items),
+            MenuItem("Train", icon=HAND_ICON, submenu=train_items),
+            MenuItem("Feed", icon=MEAL_ICON, submenu=feed_items),
+        ]
+        
         if toy_items:
-            items.append(MenuItem("Use toys", icon=TOYS_ICON, submenu=toy_items))
+            items.append(MenuItem("Play", icon=TOYS_ICON, submenu=toy_items))
 
         return items
 
