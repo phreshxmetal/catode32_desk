@@ -30,9 +30,9 @@ class LoungeingBehavior(BaseBehavior):
     def __init__(self, character):
         super().__init__(character)
 
-        self.settle_duration = 1.0
-        self.lounge_duration = 20.0
-        self.rouse_duration = 1.0
+        self.settle_duration = random.uniform(1.0, 3.0)
+        self.lounge_duration = random.uniform(20.0, 40.0)
+        self.rouse_duration = random.uniform(1.0, 3.0)
 
     def next(self, context):
         if random.random() < 0.3:
