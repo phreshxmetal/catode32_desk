@@ -20,15 +20,15 @@ class HidingBehavior(BaseBehavior):
     NAME = "hiding"
 
     STAT_EFFECTS = {
-        "comfort": 0.1,
+        "comfort": 0.05,
         "patience": 0.05,
-        "independence": 0.2,
+        "independence": 0.02,
         "charisma": -0.02,
         "courage": -0.02
     }
     COMPLETION_BONUS = {
-        "comfort": 2,
-        "independence": 5,
+        "comfort": 1,
+        "independence": 2,
     }
 
     @classmethod

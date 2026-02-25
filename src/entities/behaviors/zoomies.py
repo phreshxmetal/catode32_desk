@@ -26,7 +26,7 @@ class ZoomiesBehavior(BaseBehavior):
     }
     COMPLETION_BONUS = {
         "energy": -10,
-        "playfulness": -5,
+        "playfulness": -2,
         "fitness": 1,
         "cleanliness": -1
     }

@@ -25,8 +25,8 @@ class SleepingBehavior(BaseBehavior):
         return random.uniform(5, max(5, context.energy * 1.5))
 
     # Stat effects during sleep
-    STAT_EFFECTS = {"energy": 0.2, "comfort": 0.2}
-    COMPLETION_BONUS = {"energy": 5, "comfort": 10}
+    STAT_EFFECTS = {"energy": 0.01, "comfort": 0.01}
+    COMPLETION_BONUS = {"energy": 5, "comfort": 4}
 
     # Sleep pose options
     SLEEP_POSES = [

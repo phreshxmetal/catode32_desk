@@ -27,14 +27,14 @@ class IdleBehavior(BaseBehavior):
     }
 
     STAT_EFFECTS = {
-        "curiosity": 0.1,
-        "energy": -0.1,
-        "fullness": -0.1,
-        "cleanliness": -0.04,
+        "curiosity": 0.02,
+        "energy": -0.02,
+        "fullness": -0.02,
+        "cleanliness": -0.02,
         "comfort": -0.02
     }
     COMPLETION_BONUS = {
-        "playfulness": 2,
+        "playfulness": 0.5,
         "craftiness": -0.05,
         "appetite": -0.002,
         "affection": -0.05,
@@ -108,7 +108,7 @@ class IdleBehavior(BaseBehavior):
 
         print("Idle change priorities:")
         for cls in sorted(candidates, key=lambda c: priorities[c]):
-            print(f"  {cls.NAME}: priority={priorities[cls]}")
+            print(f">> {cls.NAME}: priority={priorities[cls]}")
 
         best_priority = min(priorities.values())
         top = [cls for cls, p in priorities.items() if p == best_priority]

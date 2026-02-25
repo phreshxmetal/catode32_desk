@@ -43,7 +43,7 @@ class PacingBehavior(BaseBehavior):
 
     @classmethod
     def get_priority(cls, context):
-        return random.uniform(15, max(15, min(context.comfort, context.patience, context.serenity) * 1.5))
+        return random.uniform(20, max(20, min(context.comfort, context.patience, context.serenity) * 2.5))
 
     def __init__(self, character):
         super().__init__(character)

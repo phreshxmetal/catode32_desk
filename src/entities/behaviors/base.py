@@ -101,6 +101,7 @@ class BaseBehavior:
         if self._active:
             return
 
+        print("")
         print(f"[Behavior started] {self.NAME}")
 
         self._active = True
@@ -204,9 +205,12 @@ class BaseBehavior:
             context: The GameContext to modify.
             progress: How much of the behavior was completed (0.0 to 1.0).
         """
+        for stat, rate in self.STAT_EFFECTS.items():
+            print(f"    {stat}: --> {getattr(context, stat, 0)}")
+
         for stat, bonus in self.COMPLETION_BONUS.items():
             current = getattr(context, stat, 0)
             new_value = max(0, min(100, current + bonus * progress))
             setattr(context, stat, new_value)
-            print(f">>> {stat}: {new_value}")
+            print(f"    {stat}: {current} --> {new_value}")
 
