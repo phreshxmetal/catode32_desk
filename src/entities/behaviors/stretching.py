@@ -17,7 +17,12 @@ class StretchingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.comfort < 40
+        trigger = context.comfort < 70
+
+        if not trigger:
+            print("Skipping stretching. Comfort: %6.4f" % context.comfort)
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):

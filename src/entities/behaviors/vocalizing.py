@@ -33,7 +33,17 @@ class VocalizingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy > 50 and context.playfulness > 60
+        trigger = context.energy > 35 and context.playfulness > 35
+
+        if not trigger:
+            failures = []
+            if context.energy <= 50:
+                failures.append("Energy: %6.4f" % context.energy)
+            if context.playfulness <= 60:
+                failures.append("Playfulness: %6.4f" % context.playfulness)
+            print("Skipping vocalizing. " + ", ".join(failures))
+
+        return trigger
 
     @classmethod
     def get_priority(cls, context):

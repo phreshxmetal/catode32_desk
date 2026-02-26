@@ -21,17 +21,22 @@ class ObservingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.curiosity >= 60
+        trigger = context.curiosity >= 30
+
+        if not trigger:
+            print("Skipping observing. Curiosity: %6.4f" % context.curiosity)
+
+        return trigger
 
     @classmethod
     def get_priority(cls, context):
         return random.uniform(20, max(20, 100 - context.curiosity))
 
     STAT_EFFECTS = {
-        "curiosity": -0.1
+        "curiosity": -0.01
     }
     COMPLETION_BONUS = {
-        "curiosity": -2,
+        "curiosity": -1,
         "fulfillment": 1
     }
 

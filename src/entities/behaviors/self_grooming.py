@@ -35,7 +35,17 @@ class SelfGroomingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.cleanliness < 40 and context.energy > 30
+        trigger = context.cleanliness < 70 and context.energy > 30
+
+        if not trigger:
+            failures = []
+            if context.cleanliness >= 40:
+                failures.append("Cleanliness: %6.4f" % context.cleanliness)
+            if context.energy <= 30:
+                failures.append("Energy: %6.4f" % context.energy)
+            print("Skipping self grooming. " + ", ".join(failures))
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):

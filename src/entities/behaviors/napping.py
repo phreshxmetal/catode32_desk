@@ -21,7 +21,12 @@ class NappingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy < 40
+        trigger = context.energy < 60
+
+        if not trigger:
+            print("Skipping napping. Energy: %6.4f" % context.energy)
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):
@@ -32,8 +37,10 @@ class NappingBehavior(BaseBehavior):
         "focus": 0.01
     }
     COMPLETION_BONUS = {
-        "energy": 3,
-        "focus": 1
+        "energy": 8,
+        "focus": 2,
+        "playfulness": 4,
+        "curiosity": 1,
     }
 
     NAP_POSES = [

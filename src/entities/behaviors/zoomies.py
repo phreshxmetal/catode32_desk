@@ -33,11 +33,21 @@ class ZoomiesBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy > 40 and context.playfulness > 40
+        trigger = context.energy > 40 and context.playfulness > 40
+
+        if not trigger:
+            failures = []
+            if context.energy <= 40:
+                failures.append("Energy: %6.4f" % context.energy)
+            if context.playfulness <= 40:
+                failures.append("Playfulness: %6.4f" % context.playfulness)
+            print("Skipping zoomies. " + ", ".join(failures))
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):
-        return random.uniform(100 - context.playfulness, context.playfulness * 1.5)
+        return random.uniform(100 - context.playfulness * 1.5, context.playfulness * 1.5)
 
     def __init__(self, character):
         super().__init__(character)

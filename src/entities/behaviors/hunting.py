@@ -45,7 +45,19 @@ class HuntingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy > 60 and context.playfulness > 40 and context.curiosity > 40
+        trigger = context.energy > 40 and context.playfulness > 40 and context.curiosity > 40
+
+        if not trigger:
+            failures = []
+            if context.energy <= 40:
+                failures.append("Energy: %6.4f" % context.energy)
+            if context.playfulness <= 40:
+                failures.append("Playfulness: %6.4f" % context.playfulness)
+            if context.curiosity <= 40:
+                failures.append("Curiosity: %6.4f" % context.curiosity)
+            print("Skipping hunting. " + ", ".join(failures))
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):

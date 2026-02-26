@@ -24,11 +24,23 @@ class LoungeingBehavior(BaseBehavior):
         "patience": 0.05,
         "fitness": -0.1
     }
-    COMPLETION_BONUS = {}
+    COMPLETION_BONUS = {
+        "fulfillment": -2,
+    }
 
     @classmethod
     def can_trigger(cls, context):
-        return context.focus > 40 and context.serenity > 30
+        trigger = context.focus > 40 and context.serenity > 30
+
+        if not trigger:
+            failures = []
+            if context.focus <= 40:
+                failures.append("Focus: %6.2f" % context.focus)
+            if context.serenity <= 30:
+                failures.append("Serenity: %6.2f" % context.serenity)
+            print("Skipping lounging. " + ", ".join(failures))
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):

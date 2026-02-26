@@ -31,9 +31,10 @@ class IdleBehavior(BaseBehavior):
         "energy": -0.02,
         "fullness": -0.02,
         "cleanliness": -0.02,
-        "comfort": -0.02
+        "comfort": -0.05
     }
     COMPLETION_BONUS = {
+        "fulfillment": -0.5,
         "playfulness": 0.5,
         "craftiness": -0.05,
         "appetite": -0.002,
@@ -96,6 +97,7 @@ class IdleBehavior(BaseBehavior):
         from entities.behaviors.lounging import LoungeingBehavior
         from entities.behaviors.startled import StartledBehavior
 
+        print("--------------------------------------------------------------------------------")
         candidates = []
         for cls in (SleepingBehavior, NappingBehavior, ZoomiesBehavior, VocalizingBehavior, HuntingBehavior, PlayingBehavior, InvestigatingBehavior, ObservingBehavior, SelfGroomingBehavior, StretchingBehavior, PacingBehavior, LoungeingBehavior, StartledBehavior):
             if cls.can_trigger(context):
@@ -106,9 +108,9 @@ class IdleBehavior(BaseBehavior):
 
         priorities = {cls: cls.get_priority(context) for cls in candidates}
 
-        print("Idle change priorities:")
         for cls in sorted(candidates, key=lambda c: priorities[c]):
             print(f">> {cls.NAME}: priority={priorities[cls]}")
+        print("--------------------------------------------------------------------------------")
 
         best_priority = min(priorities.values())
         top = [cls for cls, p in priorities.items() if p == best_priority]

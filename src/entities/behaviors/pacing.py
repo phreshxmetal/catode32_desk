@@ -35,11 +35,24 @@ class PacingBehavior(BaseBehavior):
     }
     COMPLETION_BONUS = {
         "cleanliness": -2,
+        "fulfillment": -2,
     }
 
     @classmethod
     def can_trigger(cls, context):
-        return context.comfort < 60 and context.patience < 60 and context.serenity < 60
+        trigger = context.comfort < 60 and context.patience < 60 and context.serenity < 60
+
+        if not trigger:
+            failures = []
+            if context.comfort >= 60:
+                failures.append("Comfort: %6.4f" % context.comfort)
+            if context.patience >= 60:
+                failures.append("Patience: %6.4f" % context.patience)
+            if context.serenity >= 60:
+                failures.append("Serenity: %6.4f" % context.serenity)
+            print("Skipping pacing. " + ", ".join(failures))
+
+        return trigger
 
     @classmethod
     def get_priority(cls, context):

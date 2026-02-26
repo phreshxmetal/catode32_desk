@@ -18,15 +18,29 @@ class SleepingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.energy < 40
+        trigger = context.energy < 40
+
+        if not trigger:
+            print("Skipping sleeping. Energy: %6.4f" % context.energy)
+
+        return trigger
     
     @classmethod
     def get_priority(cls, context):
         return random.uniform(5, max(5, context.energy * 1.5))
 
     # Stat effects during sleep
-    STAT_EFFECTS = {"energy": 0.01, "comfort": 0.01}
-    COMPLETION_BONUS = {"energy": 5, "comfort": 4}
+    STAT_EFFECTS = {
+        "energy": 0.01,
+        "comfort": 0.01
+    }
+    COMPLETION_BONUS = {
+        "energy": 16,
+        "comfort": 4,
+        "playfulness": 6,
+        "focus": 4,
+        "curiosity": 2,
+    }
 
     # Sleep pose options
     SLEEP_POSES = [

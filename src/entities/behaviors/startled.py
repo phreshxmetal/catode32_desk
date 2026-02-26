@@ -27,7 +27,12 @@ class StartledBehavior(BaseBehavior):
     @classmethod
     def can_trigger(cls, context):
         p = 0.15 * (1 - context.courage / 200) * (1 - context.resilience / 200)
-        return random.random() < p
+        trigger = random.random() < p
+
+        if not trigger:
+            print("Skipping startled. Courage %6.4f, Resilience %6.4f" % (context.courage, context.resilience))
+        
+        return trigger
 
     @classmethod
     def get_priority(cls, context):

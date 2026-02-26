@@ -17,7 +17,12 @@ class InvestigatingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        return context.curiosity >= 70
+        trigger = context.curiosity >= 40
+
+        if not trigger:
+            print("Skipping investigating. Curiosity: %6.4f" % context.curiosity)
+
+        return trigger
 
     @classmethod
     def get_priority(cls, context):
@@ -26,7 +31,7 @@ class InvestigatingBehavior(BaseBehavior):
     # Investigating satisfies curiosity but adds stimulation
     STAT_EFFECTS = {}
     COMPLETION_BONUS = {
-        "curiosity": -5,
+        "curiosity": -1,
         "fulfillment": 5,
         "maturity": 2,
         "dignity": 0.2
