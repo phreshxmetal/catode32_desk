@@ -6,11 +6,12 @@ from ui import draw_bubble
 
 
 class VocalizingBehavior(BaseBehavior):
-    """Pet breaks into an excited vocal outburst.
+    """Pet breaks into a vocal outburst, either joyful or to express an unmet need.
 
-    Requires high energy and playfulness to trigger, same as zoomies.
-    Expresses itself through a speech bubble during the vocalizing phase.
-    Can chain back into zoomies or dissolve to idle.
+    Happy vocalizing requires high energy and playfulness.
+    Need-based vocalizing triggers when fullness, comfort, fulfillment, or
+    affection drop below NEED_THRESHOLD — the more critical the need, the
+    higher the priority.  The speech bubble icon reflects the dominant need.
 
     Phases:
     1. winding_up  - Pet gears up, shifts pose
@@ -20,6 +21,8 @@ class VocalizingBehavior(BaseBehavior):
 
     NAME = "vocalizing"
 
+    NEED_THRESHOLD = 35
+
     COMPLETION_BONUS = {
         "energy": -5.85,
         "playfulness": -2.35,
@@ -28,7 +31,15 @@ class VocalizingBehavior(BaseBehavior):
 
     @classmethod
     def can_trigger(cls, context):
-        trigger = context.energy > 35 and context.playfulness > 35
+        happy = context.energy > 35 and context.playfulness > 35
+        needs_unmet = (
+            context.fullness < cls.NEED_THRESHOLD
+            or context.comfort < cls.NEED_THRESHOLD
+            or context.fulfillment < cls.NEED_THRESHOLD
+            or context.affection < cls.NEED_THRESHOLD
+        )
+
+        trigger = happy or needs_unmet
 
         if not trigger:
             failures = []
@@ -42,13 +53,36 @@ class VocalizingBehavior(BaseBehavior):
 
     @classmethod
     def get_priority(cls, context):
+        urgency = max(
+            cls.NEED_THRESHOLD - context.fullness,
+            cls.NEED_THRESHOLD - context.comfort,
+            cls.NEED_THRESHOLD - context.fulfillment,
+            cls.NEED_THRESHOLD - context.affection,
+            0,
+        )
+        if urgency > 0:
+            return max(1, 65 - urgency * 2)
         return random.uniform(10, max(10, (200 - context.energy - context.playfulness) * 0.6))
+
+    @classmethod
+    def _pick_icon(cls, context):
+        needs = [
+            (context.fullness, "hunger"),
+            (context.comfort, "discomfort"),
+            (context.fulfillment, "bored"),
+            (context.affection, "lonely"),
+        ]
+        worst_stat, worst_icon = min(needs, key=lambda x: x[0])
+        if worst_stat < cls.NEED_THRESHOLD:
+            return worst_icon
+        return "exclaim"
 
     def __init__(self, character):
         super().__init__(character)
         self.windup_duration = 1.0
         self.vocalize_duration = 6.0
         self.settle_duration = 1.5
+        self._vocalize_icon = "exclaim"
 
     def next(self, context):
         if random.random() < 0.2:
@@ -62,6 +96,7 @@ class VocalizingBehavior(BaseBehavior):
         super().start(on_complete)
         self._phase = "winding_up"
         self._character.set_pose("sitting.forward.neutral")
+        self._vocalize_icon = self._pick_icon(self._character.context)
 
     def update(self, dt):
         if not self._active:
@@ -88,4 +123,4 @@ class VocalizingBehavior(BaseBehavior):
 
     def draw(self, renderer, char_x, char_y, mirror=False):
         if self._active and self._phase == "vocalizing":
-            draw_bubble(renderer, "exclaim", char_x, char_y, self._progress, mirror)
+            draw_bubble(renderer, self._vocalize_icon, char_x, char_y, self._progress, mirror)

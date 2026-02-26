@@ -8,6 +8,10 @@ from assets.effects import (
     BUBBLE_EXCLAIM,
     BUBBLE_NOTE,
     BUBBLE_STAR,
+    BUBBLE_HUNGER,
+    BUBBLE_DISCOMFORT,
+    BUBBLE_MINICAT,
+    BUBBLE_MINIGAME,
 )
 
 # Map bubble names to sprites
@@ -17,6 +21,10 @@ BUBBLE_SPRITES = {
     "exclaim": BUBBLE_EXCLAIM,
     "note": BUBBLE_NOTE,
     "star": BUBBLE_STAR,
+    "hunger": BUBBLE_HUNGER,
+    "discomfort": BUBBLE_DISCOMFORT,
+    "bored": BUBBLE_MINIGAME,
+    "lonely": BUBBLE_MINICAT,
 }
 
 

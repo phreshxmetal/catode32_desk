@@ -160,8 +160,6 @@ class BaseBehavior:
             next_behavior = next_cls(self._character)
             self._character.current_behavior = next_behavior
             next_behavior.start(**next_kwargs)
-        
-        print(f"[Behavior stopped] {self.NAME}")
 
     def update(self, dt):
         """Update behavior state each frame.
