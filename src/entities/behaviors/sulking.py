@@ -21,16 +21,11 @@ class SulkingBehavior(BaseBehavior):
 
     NAME = "sulking"
 
-    STAT_EFFECTS = {
-        "comfort": 0.1,
-        "independence": 0.1,
-        "curiosity": 0.1,
-        "courage": -0.01
-    }
     COMPLETION_BONUS = {
-        "comfort": 1,
-        "independence": 5,
-        "curiosity": 3,
+        "comfort": 2.05,
+        "independence": 6.05,
+        "curiosity": 4.05,
+        "courage": -0.11,
     }
 
     @classmethod

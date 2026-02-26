@@ -32,15 +32,12 @@ class NappingBehavior(BaseBehavior):
     def get_priority(cls, context):
         return random.uniform(10, max(10, context.energy * 2))
 
-    STAT_EFFECTS = {
-        "energy": 0.1,
-        "focus": 0.01
-    }
     COMPLETION_BONUS = {
-        "energy": 8,
-        "focus": 2,
+        "energy": 26.55,
+        "focus": 5.16,
         "playfulness": 4,
         "curiosity": 1,
+        "fitness": 0.03,
     }
 
     NAP_POSES = [

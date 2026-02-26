@@ -22,34 +22,34 @@ class HuntingBehavior(BaseBehavior):
 
     NAME = "hunting"
 
-    STAT_EFFECTS = {
-        "energy": -0.1,
-        "comfort": -0.1,
-        "playfulness": -0.1,
-        "cleanliness": -0.1,
-        "charisma": -0.02,
-        "serenity": -0.03,
-        "patience": -0.04,
-    }
     COMPLETION_BONUS = {
-        "fulfillment": 5,
-        "independence": 5,
-        "intelligence": 5,
-        "resilience": 5,
+        "fulfillment": 2,
+        "independence": 0.5,
+        "intelligence": 0.5,
+        "resilience": 0.5,
         "fitness": 1,
         "craftiness": 0.2,
         "mischievousness": 0.2,
-        "energy": -5,
-        "cleanliness": -5,
+        "energy": -6.35,
+        "cleanliness": -2.35,
+        "comfort": -1.35,
+        "playfulness": -1.35,
+        "charisma": -0.27,
+        "serenity": -0.41,
+        "patience": -0.54,
     }
 
     @classmethod
     def can_trigger(cls, context):
-        trigger = context.energy > 40 and context.playfulness > 40 and context.curiosity > 40
+        # Survival instinct: a starving pet will hunt regardless of mood
+        if context.fullness < 15 and context.energy > 20:
+            return True
+
+        trigger = context.energy > 20 and context.playfulness > 40 and context.curiosity > 40
 
         if not trigger:
             failures = []
-            if context.energy <= 40:
+            if context.energy <= 20:
                 failures.append("Energy: %6.4f" % context.energy)
             if context.playfulness <= 40:
                 failures.append("Playfulness: %6.4f" % context.playfulness)
@@ -63,7 +63,7 @@ class HuntingBehavior(BaseBehavior):
     def get_priority(cls, context):
         upper = max(20, (100 - context.energy) * 0.7 + (100 - context.playfulness) * 0.5)
         hunger_bonus = (100 - context.fullness) * 0.3
-        return max(5, random.uniform(20, upper) - hunger_bonus)
+        return random.uniform(10, max(10, upper - hunger_bonus * 0.5))
 
     def __init__(self, character):
         super().__init__(character)

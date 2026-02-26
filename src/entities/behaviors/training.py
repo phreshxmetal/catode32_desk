@@ -18,29 +18,17 @@ class TrainingBehavior(BaseBehavior):
 
     NAME = "training"
 
-    STAT_EFFECTS = {
-        "intelligence": 0.2,
-        "fitness": 0.01,
-        "resilience": 0.2,
-        "sociability": 0.1,
-        "fulfillment": 0.2,
-        "patience": 0.02,
-        "loyalty": 0.02,
-        "courage": 0.02,
-        "energy": -0.5,
-        "focus": -0.1,
-    }
     COMPLETION_BONUS = {
-        "intelligence": 8,
-        "fitness": 1,
-        "resilience": 8,
-        "sociability": 5,
-        "fulfillment": 3,
-        "patience": 1,
-        "loyalty": 0.5,
-        "courage": 0.5,
-        "energy": -15,
-        "focus": -2,
+        "intelligence": 11.2,
+        "fitness": 1.16,
+        "resilience": 11.2,
+        "sociability": 6.6,
+        "fulfillment": 6.2,
+        "patience": 1.32,
+        "loyalty": 0.82,
+        "courage": 0.82,
+        "energy": -23,
+        "focus": -3.6,
         "dignity": 1,
     }
 

@@ -18,14 +18,12 @@ class LoungeingBehavior(BaseBehavior):
 
     NAME = "lounging"
 
-    STAT_EFFECTS = {
-        "comfort": -0.1,
-        "energy": -0.05,
-        "patience": 0.05,
-        "fitness": -0.1
-    }
     COMPLETION_BONUS = {
         "fulfillment": -2,
+        "comfort": -3.4,
+        "energy": -1.7,
+        "patience": 1.7,
+        "fitness": -1.7,
     }
 
     @classmethod

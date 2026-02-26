@@ -28,13 +28,11 @@ class InvestigatingBehavior(BaseBehavior):
     def get_priority(cls, context):
         return random.uniform(10, max(10, 100 - context.curiosity))
 
-    # Investigating satisfies curiosity but adds stimulation
-    STAT_EFFECTS = {}
     COMPLETION_BONUS = {
-        "curiosity": -1,
-        "fulfillment": 5,
-        "maturity": 2,
-        "dignity": 0.2
+        "curiosity": -1.83,
+        "maturity": 0.3,
+        "dignity": 0.2,
+        "fulfillment": 0.5,
     }
 
     def __init__(self, character):
@@ -87,7 +85,7 @@ class InvestigatingBehavior(BaseBehavior):
                 self.stop(completed=True)
 
     def next(self, context):
-        if random.random() < 0.5:
+        if random.random() < 0.3:
             from entities.behaviors.observing import ObservingBehavior
             return ObservingBehavior
         return None  # -> idle

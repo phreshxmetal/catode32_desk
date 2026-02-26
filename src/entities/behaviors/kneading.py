@@ -18,15 +18,11 @@ class KneadingBehavior(BaseBehavior):
 
     NAME = "kneading"
 
-    STAT_EFFECTS = {
-        "comfort": 0.2,
-        "cleanliness": 0.05,
-        "serenity": 0.01,
-    }
     COMPLETION_BONUS = {
         "focus": -1,
-        "comfort": 2,
-        "serenity": 0.1,
+        "comfort": 5.5,
+        "serenity": 0.28,
+        "cleanliness": 0.88,
     }
 
     @classmethod

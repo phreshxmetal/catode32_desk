@@ -18,8 +18,7 @@ class ChatteringBehavior(BaseBehavior):
 
     NAME = "chattering"
 
-    STAT_EFFECTS = {"curiosity": -0.5, "playfulness": 0.5}
-    COMPLETION_BONUS = {"curiosity": -5, "playfulness": 5}
+    COMPLETION_BONUS = {"curiosity": -7.5, "playfulness": 7.5}
 
     @classmethod
     def get_priority(cls, context):

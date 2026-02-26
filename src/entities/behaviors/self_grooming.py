@@ -19,18 +19,15 @@ class SelfGroomingBehavior(BaseBehavior):
 
     NAME = "self_grooming"
 
-    STAT_EFFECTS = {
-        "cleanliness": 0.5,
-        "energy": -0.1,
-        "comfort": -0.1,
-        "focus": -0.1,
-        "charisma": 0.04
-    }
     COMPLETION_BONUS = {
-        "cleanliness": 5,
+        "cleanliness": 12.25,
         "fulfillment": 2,
-        "grace": 3,
-        "sociability": 2,
+        "grace": 1.5,
+        "sociability": 0.3,
+        "energy": -1.45,
+        "comfort": -1.45,
+        "focus": -1.45,
+        "charisma": 0.58,
     }
 
     @classmethod
@@ -39,7 +36,7 @@ class SelfGroomingBehavior(BaseBehavior):
 
         if not trigger:
             failures = []
-            if context.cleanliness >= 40:
+            if context.cleanliness >= 70:
                 failures.append("Cleanliness: %6.4f" % context.cleanliness)
             if context.energy <= 30:
                 failures.append("Energy: %6.4f" % context.energy)

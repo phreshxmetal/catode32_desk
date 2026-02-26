@@ -27,28 +27,25 @@ class PacingBehavior(BaseBehavior):
 
     NAME = "pacing"
 
-    STAT_EFFECTS = {
-        "comfort": 0.1,
-        "charisma": -0.01,
-        "mischievousness": 0.03,
-        "patience": 0.07
-    }
     COMPLETION_BONUS = {
         "cleanliness": -2,
         "fulfillment": -2,
+        "comfort": 1.25,
+        "charisma": -0.13,
+        "mischievousness": 0.38,
+        "patience": 0.88,
     }
 
     @classmethod
     def can_trigger(cls, context):
-        trigger = context.comfort < 60 and context.patience < 60 and context.serenity < 60
+        trigger = context.comfort < 65 and (context.patience < 60 or context.serenity < 60)
 
         if not trigger:
             failures = []
-            if context.comfort >= 60:
+            if context.comfort >= 65:
                 failures.append("Comfort: %6.4f" % context.comfort)
-            if context.patience >= 60:
+            if context.patience >= 60 and context.serenity >= 60:
                 failures.append("Patience: %6.4f" % context.patience)
-            if context.serenity >= 60:
                 failures.append("Serenity: %6.4f" % context.serenity)
             print("Skipping pacing. " + ", ".join(failures))
 
@@ -56,7 +53,8 @@ class PacingBehavior(BaseBehavior):
 
     @classmethod
     def get_priority(cls, context):
-        return random.uniform(20, max(20, min(context.comfort, context.patience, context.serenity) * 2.5))
+        worst = min(context.comfort, context.patience, context.serenity)
+        return random.uniform(10, max(10, 100 - (100 - worst) * 0.8))
 
     def __init__(self, character):
         super().__init__(character)

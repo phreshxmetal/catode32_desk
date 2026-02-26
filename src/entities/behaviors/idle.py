@@ -27,19 +27,18 @@ class IdleBehavior(BaseBehavior):
         "standing.side.happy",
     }
 
-    STAT_EFFECTS = {
-        "curiosity": 0.02,
-        "energy": -0.02,
-        "fullness": -0.02,
-        "cleanliness": -0.02,
-        "comfort": -0.05
-    }
     COMPLETION_BONUS = {
-        "fulfillment": -0.5,
+        "fulfillment": -1,
         "playfulness": 0.5,
         "craftiness": -0.05,
         "appetite": -0.002,
         "affection": -0.05,
+        "curiosity": 0.75,
+        "energy": -0.75,
+        "fullness": -0.75,
+        "cleanliness": -0.75,
+        "comfort": -1.88,
+        "focus": -0.19,
     }
 
     def __init__(self, character):
@@ -79,9 +78,10 @@ class IdleBehavior(BaseBehavior):
         if not context:
             return None
         
-        # Sometimes, just stay idle
-        if random.uniform(0, context.serenity) > 50:
-            print("Just staying idle")
+        # High serenity makes the pet content to keep resting
+        # At serenity=25: ~0%, serenity=50: ~17%, serenity=75: ~33%, serenity=100: ~50%
+        if context.serenity > 25 and random.random() < (context.serenity - 25) / 150:
+            print(f"Staying idle (serenity: {context.serenity:.1f})")
             return None
 
         from entities.behaviors.sleeping import SleepingBehavior
@@ -118,7 +118,10 @@ class IdleBehavior(BaseBehavior):
         binned = {cls: math.ceil(p / 10) * 10 for cls, p in priorities.items()}
         best_bin = min(binned.values())
         top = [cls for cls, b in binned.items() if b == best_bin]
-        return random.choice(top)
+        chosen = random.choice(top)
+        if len(top) > 1:
+            print(f">> Selected: {chosen.NAME} (from bin tied at {best_bin}: {[c.NAME for c in top]})")
+        return chosen
 
     def _pick_new_pose(self):
         """Select a new random idle pose and reset the timer."""

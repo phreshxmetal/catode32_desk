@@ -37,15 +37,12 @@ class PlayingBehavior(BaseBehavior):
     def get_priority(cls, context):
         return random.uniform(100 - context.playfulness * 1.5, context.playfulness * 1.5)
 
-    # Playing costs energy but satisfies playfulness
-    STAT_EFFECTS = {
-        "playfulness": -0.1,
-        "energy": -0.1
-    }
     COMPLETION_BONUS = {
-        "playfulness": -5,
+        "playfulness": -5.7,
         "fulfillment": 1,
-        "dignity": 0.2
+        "dignity": 0.2,
+        "energy": -0.7,
+        "fitness": 0.14,
     }
 
     def __init__(self, character):

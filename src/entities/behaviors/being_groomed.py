@@ -20,21 +20,15 @@ class BeingGroomedBehavior(BaseBehavior):
 
     NAME = "being_groomed"
 
-    STAT_EFFECTS = {
-        "cleanliness": 0.5,
-        "affection": 0.3,
-        "patience": -0.5,
-        "focus": -0.3,
-        "independence": -0.2,
-        "mischievousness": -0.02,
-    }
     COMPLETION_BONUS = {
-        "cleanliness": 15,
-        "affection": 8,
+        "cleanliness": 20.5,
+        "affection": 11.3,
         "grace": 5,
         "sociability": 3,
-        "independence": -5,
-        "mischievousness": -1,
+        "independence": -7.2,
+        "mischievousness": -1.22,
+        "patience": -5.5,
+        "focus": -3.3,
     }
 
     @classmethod

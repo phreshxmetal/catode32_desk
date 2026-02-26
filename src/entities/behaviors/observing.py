@@ -30,14 +30,11 @@ class ObservingBehavior(BaseBehavior):
 
     @classmethod
     def get_priority(cls, context):
-        return random.uniform(20, max(20, 100 - context.curiosity))
+        return random.uniform(10, max(10, 100 - context.curiosity))
 
-    STAT_EFFECTS = {
-        "curiosity": -0.01
-    }
     COMPLETION_BONUS = {
-        "curiosity": -1,
-        "fulfillment": 1
+        "curiosity": -1.53,
+        "focus": 1.21,
     }
 
     def __init__(self, character):
@@ -53,7 +50,7 @@ class ObservingBehavior(BaseBehavior):
             if random.random() < 0.4:
                 from entities.behaviors.chattering import ChatteringBehavior
                 return ChatteringBehavior
-        if random.random() < 0.5:
+        if random.random() < 0.3:
             from entities.behaviors.investigating import InvestigatingBehavior
             return InvestigatingBehavior
         return None  # -> idle

@@ -15,8 +15,6 @@ class BaseBehavior:
 
     NAME = "base"
 
-    # Stat effects (override in subclasses)
-    STAT_EFFECTS = {}         # e.g., {"energy": 0.5} = +0.5/sec during behavior
     COMPLETION_BONUS = {}     # e.g., {"energy": 10} = +10 on natural completion
 
     def __init__(self, character):
@@ -184,20 +182,6 @@ class BaseBehavior:
         """
         pass
 
-    def apply_stat_effects(self, context, dt):
-        """Apply per-frame stat changes while the behavior is active.
-
-        Called each frame by the character's update loop.
-
-        Args:
-            context: The GameContext to modify.
-            dt: Delta time in seconds.
-        """
-        for stat, rate in self.STAT_EFFECTS.items():
-            current = getattr(context, stat, 0)
-            new_value = max(0, min(100, current + rate * dt))
-            setattr(context, stat, new_value)
-
     def get_completion_bonus(self, context):
         """Return the completion bonus dict for this behavior given the context.
 
@@ -221,12 +205,8 @@ class BaseBehavior:
             context: The GameContext to modify.
             progress: How much of the behavior was completed (0.0 to 1.0).
         """
-        # for stat, rate in self.STAT_EFFECTS.items():
-            # print(f"    {stat}: --> {getattr(context, stat, 0)}")
-
         for stat, bonus in self.get_completion_bonus(context).items():
             current = getattr(context, stat, 0)
             new_value = max(0, min(100, current + bonus * progress))
             setattr(context, stat, new_value)
-            # print(f"    {stat}: {current} --> {new_value}")
 

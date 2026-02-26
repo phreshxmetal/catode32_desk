@@ -29,17 +29,13 @@ class SleepingBehavior(BaseBehavior):
     def get_priority(cls, context):
         return random.uniform(5, max(5, context.energy * 1.5))
 
-    # Stat effects during sleep
-    STAT_EFFECTS = {
-        "energy": 0.01,
-        "comfort": 0.01
-    }
     COMPLETION_BONUS = {
-        "energy": 16,
-        "comfort": 4,
+        "energy": 40.54,
+        "comfort": 4.54,
         "playfulness": 6,
         "focus": 4,
         "curiosity": 2,
+        "fitness": 0.16,
     }
 
     # Sleep pose options
@@ -56,7 +52,7 @@ class SleepingBehavior(BaseBehavior):
     def get_completion_bonus(self, context):
         bonus = dict(super().get_completion_bonus(context))
         if context.fullness > 60:
-            bonus["energy"] = bonus.get("energy", 0) + 2
+            bonus["energy"] = bonus.get("energy", 0) + 10
         return bonus
 
     def __init__(self, character):

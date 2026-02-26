@@ -20,18 +20,14 @@ class MischiefBehavior(BaseBehavior):
 
     NAME = "mischief"
 
-    STAT_EFFECTS = {
-        "mischievousness": 0.05,
-        "maturity": -0.1,
-        "dignity": -0.03,
-        "loyalty": -0.01,
-    }
     COMPLETION_BONUS = {
         "focus": -1,
-        "maturity": -0.5,
-        "loyalty": -0.05,
+        "maturity": -1.6,
+        "loyalty": -0.16,
         "playfulness": -2,
         "energy": -5,
+        "mischievousness": 0.55,
+        "dignity": -0.33,
     }
 
     @classmethod

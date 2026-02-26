@@ -115,9 +115,6 @@ class CharacterEntity(Entity):
         self.anim_tail = (self.anim_tail + dt * pose["tail"].get("speed", 1)) % self._get_total_frames(pose["tail"])
 
         if self.current_behavior and self.context:
-            # Apply stat effects before update so stats are correct even if
-            # the behavior completes and chains during this tick.
-            self.current_behavior.apply_stat_effects(self.context, dt)
             self.current_behavior.update(dt)
 
     def draw(self, renderer, mirror=False, camera_offset=0):

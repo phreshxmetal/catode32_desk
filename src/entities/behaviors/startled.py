@@ -30,7 +30,7 @@ class StartledBehavior(BaseBehavior):
         trigger = random.random() < p
 
         if not trigger:
-            print("Skipping startled. Courage %6.4f, Resilience %6.4f" % (context.courage, context.resilience))
+            print("Skipping startled. p=%.3f, Courage %6.4f, Resilience %6.4f" % (p, context.courage, context.resilience))
         
         return trigger
 
@@ -38,16 +38,11 @@ class StartledBehavior(BaseBehavior):
     def get_priority(cls, context):
         return random.uniform(20, max(20, (context.courage + context.resilience) * 0.6))
 
-    STAT_EFFECTS = {
-        "energy": -0.1,
-        "comfort": -0.1,
-        "curiosity": 0.1
-    }
     COMPLETION_BONUS = {
-        "curiosity": 5,
-        "comfort": -5,
-        "energy": -5,
-        "courage": -0.2
+        "curiosity": 5.85,
+        "comfort": -5.85,
+        "energy": -5.85,
+        "courage": -0.2,
     }
 
     def __init__(self, character):

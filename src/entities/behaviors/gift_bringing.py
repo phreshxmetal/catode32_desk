@@ -20,14 +20,10 @@ class GiftBringingBehavior(BaseBehavior):
 
     NAME = "gift_bringing"
 
-    STAT_EFFECTS = {
-        "sociability": 0.3,
-        "playfulness": 0.2,
-    }
     COMPLETION_BONUS = {
         "loyalty": 0.5,
-        "sociability": 2,
-        "playfulness": 2,
+        "sociability": 5.3,
+        "playfulness": 4.2,
         "affection": 2,
     }
 

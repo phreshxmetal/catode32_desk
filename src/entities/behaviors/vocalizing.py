@@ -20,15 +20,10 @@ class VocalizingBehavior(BaseBehavior):
 
     NAME = "vocalizing"
 
-    STAT_EFFECTS = {
-        "energy": -0.1,
-        "playfulness": -0.1,
-        "serenity": -0.03
-    }
     COMPLETION_BONUS = {
-        "energy": -5,
-        "playfulness": -1.5,
-        "serenity": -0.1
+        "energy": -5.85,
+        "playfulness": -2.35,
+        "serenity": -0.36,
     }
 
     @classmethod
@@ -37,9 +32,9 @@ class VocalizingBehavior(BaseBehavior):
 
         if not trigger:
             failures = []
-            if context.energy <= 50:
+            if context.energy <= 35:
                 failures.append("Energy: %6.4f" % context.energy)
-            if context.playfulness <= 60:
+            if context.playfulness <= 35:
                 failures.append("Playfulness: %6.4f" % context.playfulness)
             print("Skipping vocalizing. " + ", ".join(failures))
 
