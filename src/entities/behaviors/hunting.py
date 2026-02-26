@@ -62,7 +62,8 @@ class HuntingBehavior(BaseBehavior):
     @classmethod
     def get_priority(cls, context):
         upper = max(20, (100 - context.energy) * 0.7 + (100 - context.playfulness) * 0.5)
-        return random.uniform(20, upper)
+        hunger_bonus = (100 - context.fullness) * 0.3
+        return max(5, random.uniform(20, upper) - hunger_bonus)
 
     def __init__(self, character):
         super().__init__(character)
@@ -71,12 +72,14 @@ class HuntingBehavior(BaseBehavior):
         self.catch_duration = 2.0
 
     def next(self, context):
+        # Eating chance scales from 0.5 (full) to 0.9 (starving)
+        eating_chance = 0.5 + (100 - context.fullness) * 0.004
         roll = random.random()
-        if roll < 0.5:
+        if roll < eating_chance:
             from entities.behaviors.eating import EatingBehavior
             from assets.items import FISH1
-            return (EatingBehavior, {"food_sprite": FISH1, "meal_type": "fish"})
-        elif roll < 0.75:
+            return (EatingBehavior, {"food_sprite": FISH1, "food_type": "fish"})
+        elif roll < eating_chance + 0.25:
             from entities.behaviors.gift_bringing import GiftBringingBehavior
             from assets.items import FISH1
             return (GiftBringingBehavior, {"gift_sprite": FISH1})

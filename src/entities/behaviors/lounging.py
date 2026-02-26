@@ -44,7 +44,7 @@ class LoungeingBehavior(BaseBehavior):
     
     @classmethod
     def get_priority(cls, context):
-        return 100 - random.uniform(0, context.serenity)
+        return 100 - random.uniform(context.serenity, context.serenity * 1.5)
 
     def __init__(self, character):
         super().__init__(character)

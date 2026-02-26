@@ -48,6 +48,12 @@ class NappingBehavior(BaseBehavior):
         "sleeping.side.crossed",
     ]
 
+    def get_completion_bonus(self, context):
+        bonus = dict(super().get_completion_bonus(context))
+        if context.fullness > 60:
+            bonus["energy"] = bonus.get("energy", 0) + 1
+        return bonus
+    
     def __init__(self, character):
         super().__init__(character)
 

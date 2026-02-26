@@ -268,6 +268,9 @@ class SceneManager:
         if minigame_items:
             items.append(MenuItem("Minigames", icon=MINIGAMES_ICON, submenu=minigame_items))
 
+        # Environment settings
+        items.append(MenuItem("Environment", icon=SUN_ICON, action=('settings', 'environment')))
+        
         # Debug submenu
         debug_items = []
         if 'debug_context' in self._scene_registry:
@@ -281,9 +284,6 @@ class SceneManager:
         debug_items.append(MenuItem("Time Speed", icon=WRENCH_ICON, action=('settings', 'time_speed')))
         if debug_items:
             items.append(MenuItem("Debug", icon=WRENCH_ICON, submenu=debug_items))
-
-        # Environment settings
-        items.append(MenuItem("Environment", icon=SUN_ICON, action=('settings', 'environment')))
 
         return items
 
@@ -349,7 +349,7 @@ class SceneManager:
             SettingItem(
                 "Speed", "time_speed",
                 min_val=0.1,
-                max_val=10.0,
+                max_val=20.0,
                 step=0.25,
                 value=getattr(self.context, 'time_speed', 1.0)
             ),

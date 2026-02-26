@@ -35,7 +35,7 @@ class PlayingBehavior(BaseBehavior):
     
     @classmethod
     def get_priority(cls, context):
-        return random.uniform(100 - context.playfulness, context.playfulness * 1.5)
+        return random.uniform(100 - context.playfulness * 1.5, context.playfulness * 1.5)
 
     # Playing costs energy but satisfies playfulness
     STAT_EFFECTS = {

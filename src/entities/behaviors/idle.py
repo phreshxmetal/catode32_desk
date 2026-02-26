@@ -1,5 +1,6 @@
 """Idle behavior - default state when no other behavior is active."""
 
+import math
 import random
 from entities.behaviors.base import BaseBehavior
 
@@ -98,6 +99,8 @@ class IdleBehavior(BaseBehavior):
         from entities.behaviors.startled import StartledBehavior
 
         print("--------------------------------------------------------------------------------")
+        context.debug_print_stats()
+
         candidates = []
         for cls in (SleepingBehavior, NappingBehavior, ZoomiesBehavior, VocalizingBehavior, HuntingBehavior, PlayingBehavior, InvestigatingBehavior, ObservingBehavior, SelfGroomingBehavior, StretchingBehavior, PacingBehavior, LoungeingBehavior, StartledBehavior):
             if cls.can_trigger(context):
@@ -112,8 +115,9 @@ class IdleBehavior(BaseBehavior):
             print(f">> {cls.NAME}: priority={priorities[cls]}")
         print("--------------------------------------------------------------------------------")
 
-        best_priority = min(priorities.values())
-        top = [cls for cls, p in priorities.items() if p == best_priority]
+        binned = {cls: math.ceil(p / 10) * 10 for cls, p in priorities.items()}
+        best_bin = min(binned.values())
+        top = [cls for cls, b in binned.items() if b == best_bin]
         return random.choice(top)
 
     def _pick_new_pose(self):

@@ -53,6 +53,12 @@ class SleepingBehavior(BaseBehavior):
         from entities.behaviors.stretching import StretchingBehavior
         return StretchingBehavior
 
+    def get_completion_bonus(self, context):
+        bonus = dict(super().get_completion_bonus(context))
+        if context.fullness > 60:
+            bonus["energy"] = bonus.get("energy", 0) + 2
+        return bonus
+
     def __init__(self, character):
         """Initialize the sleeping behavior.
 

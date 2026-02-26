@@ -21,12 +21,12 @@ class ZoomiesBehavior(BaseBehavior):
     STAT_EFFECTS = {
         "fitness": 0.1,
         "energy": -0.1,
-        "playfulness": -0.1,
+        "playfulness": -0.2,
         "cleanliness": -0.1
     }
     COMPLETION_BONUS = {
         "energy": -10,
-        "playfulness": -2,
+        "playfulness": -4,
         "fitness": 1,
         "cleanliness": -1
     }

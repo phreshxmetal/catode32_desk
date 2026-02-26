@@ -30,10 +30,10 @@ class StretchingBehavior(BaseBehavior):
 
     # Stretching improves comfort and vigor
     STAT_EFFECTS = {
-        "comfort": 0.01
+        "comfort": 0.02
     }
     COMPLETION_BONUS = {
-        "comfort": 1
+        "comfort": 5
     }
 
     def next(self, context):

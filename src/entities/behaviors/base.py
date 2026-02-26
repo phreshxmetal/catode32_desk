@@ -128,8 +128,6 @@ class BaseBehavior:
         """
         if not self._active:
             return
-        
-        print(f"[Behavior stopped] {self.NAME}")
 
         self._active = False
         self._phase = None
@@ -164,6 +162,8 @@ class BaseBehavior:
             next_behavior = next_cls(self._character)
             self._character.current_behavior = next_behavior
             next_behavior.start(**next_kwargs)
+        
+        print(f"[Behavior stopped] {self.NAME}")
 
     def update(self, dt):
         """Update behavior state each frame.
@@ -198,6 +198,22 @@ class BaseBehavior:
             new_value = max(0, min(100, current + rate * dt))
             setattr(context, stat, new_value)
 
+    def get_completion_bonus(self, context):
+        """Return the completion bonus dict for this behavior given the context.
+
+        Override in subclasses to add conditional modifiers based on stats.
+        WARNING: Always return a copy (dict(super().get_completion_bonus(context)))
+        rather than mutating the returned dict in place — COMPLETION_BONUS is a
+        class attribute shared across all instances.
+
+        Args:
+            context: The GameContext.
+
+        Returns:
+            Dict mapping stat names to bonus values.
+        """
+        return self.COMPLETION_BONUS
+
     def apply_completion_bonus(self, context, progress=1.0):
         """Apply completion bonus stats, scaled by how much was completed.
 
@@ -205,12 +221,12 @@ class BaseBehavior:
             context: The GameContext to modify.
             progress: How much of the behavior was completed (0.0 to 1.0).
         """
-        for stat, rate in self.STAT_EFFECTS.items():
-            print(f"    {stat}: --> {getattr(context, stat, 0)}")
+        # for stat, rate in self.STAT_EFFECTS.items():
+            # print(f"    {stat}: --> {getattr(context, stat, 0)}")
 
-        for stat, bonus in self.COMPLETION_BONUS.items():
+        for stat, bonus in self.get_completion_bonus(context).items():
             current = getattr(context, stat, 0)
             new_value = max(0, min(100, current + bonus * progress))
             setattr(context, stat, new_value)
-            print(f"    {stat}: {current} --> {new_value}")
+            # print(f"    {stat}: {current} --> {new_value}")
 
