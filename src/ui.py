@@ -390,7 +390,7 @@ def draw_bubble(renderer, bubble_type, char_x, char_y, progress=0.0, mirror=Fals
     if content_sprite:
         content_x = bubble_x + 4
         content_y = bubble_y + 2
-        renderer.draw_sprite_obj(
-            content_sprite, content_x, content_y,
+        renderer.draw_sprite(
+            content_sprite, 9, 9, content_x, content_y,
             invert=True, transparent=True, transparent_color=1
         )
