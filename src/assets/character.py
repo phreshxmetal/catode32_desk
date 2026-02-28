@@ -1553,6 +1553,13 @@ POSES = {
                 "tail": CHAR_TAIL_UP_NEUTRAL,
                 "head_first": True,
             },
+            "angry": {
+                "head": CHAR_HEAD_SIDE_AIRPLANE,
+                "body": CHAR_BODY_SIDE_KNEADING,
+                "eyes": CHAR_EYES_SIDE_ANGRY,
+                "tail": CHAR_TAIL_UP_NEUTRAL2,
+                "head_first": True,
+            },
         }
     },
     "walking": {
