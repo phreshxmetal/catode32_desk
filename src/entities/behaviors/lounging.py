@@ -51,17 +51,29 @@ class LoungeingBehavior(BaseBehavior):
     def get_priority(cls, context):
         return 100 - random.uniform(context.serenity, context.serenity * 2.0)
 
+    LOUNGE_POSES = [
+        "laying.side.neutral",
+        "laying.side.neutral2",
+        "laying.side.aloof",
+        "laying.side.happy",
+    ]
+
     def __init__(self, character):
         super().__init__(character)
 
-        self.settle_duration = random.uniform(1.0, 3.0)
-        self.lounge_duration = random.uniform(20.0, 40.0)
-        self.rouse_duration = random.uniform(1.0, 3.0)
+        self.settle_duration = random.uniform(4.0, 10.0)
+        self.lounge_duration = random.uniform(30.0, 120.0)
+        self.rouse_duration = random.uniform(1.0, 5.0)
+        self._lounge_pose = random.choice(self.LOUNGE_POSES)
 
     def next(self, context):
-        if random.random() < 0.3:
-            from entities.behaviors.kneading import KneadingBehavior
+        from entities.behaviors.kneading import KneadingBehavior
+        from entities.behaviors.napping import NappingBehavior
+
+        if random.random() * 100 < KneadingBehavior.get_priority(context):
             return KneadingBehavior
+        if random.random() * 100 < NappingBehavior.get_priority(context):
+            return NappingBehavior
         return None  # -> idle
 
     def start(self, on_complete=None):
@@ -69,7 +81,7 @@ class LoungeingBehavior(BaseBehavior):
             return
         super().start(on_complete)
         self._phase = "settling"
-        self._character.set_pose("sitting.side.looking_down")
+        self._character.set_pose("kneading.side.neutral")
 
     def update(self, dt):
         if not self._active:
@@ -80,7 +92,7 @@ class LoungeingBehavior(BaseBehavior):
         if self._phase == "settling":
             if self._phase_timer >= self.settle_duration:
                 self._phase = "lounging"
-                self._character.set_pose("laying.side.neutral")
+                self._character.set_pose(self._lounge_pose)
                 self._phase_timer = 0.0
 
         elif self._phase == "lounging":

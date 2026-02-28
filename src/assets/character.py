@@ -1336,6 +1336,12 @@ POSES = {
                 "eyes": CHAR_EYES_SIDE_NEUTRAL,
                 "tail": CHAR_TAIL_NEUTRAL2,
             },
+            "neutral2": {
+                "head": CHAR_HEAD_SIDE_NEUTRAL2,
+                "body": CHAR_BODY_SIDE_LAYING,
+                "eyes": CHAR_EYES_SIDE_NEUTRAL,
+                "tail": CHAR_TAIL_NEUTRAL2,
+            },
             "annoyed": {
                 "head": CHAR_HEAD_SIDE_AIRPLANE,
                 "body": CHAR_BODY_SIDE_LAYING,
