@@ -33,7 +33,7 @@ class HuntingBehavior(BaseBehavior):
         # Medium changers
         "fulfillment": 0.25,
         "independence": 0.15,
-        "intelligence": 0.5,
+        "intelligence": 0.25,
         "resilience": 0.5,
         "cleanliness": -2,
 

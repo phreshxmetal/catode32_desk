@@ -21,7 +21,7 @@ class KneadingBehavior(BaseBehavior):
     COMPLETION_BONUS = {
         # Rapid changers
         "comfort": 2,
-        "focus": -1,
+        "focus": -0.5,
 
         # Medium changers
         "cleanliness": -1,

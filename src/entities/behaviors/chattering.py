@@ -24,6 +24,7 @@ class ChatteringBehavior(BaseBehavior):
 
         # Medium changers
         "curiosity": -0.1,
+        "intelligence": -0.02,
     }
 
     @classmethod

@@ -174,7 +174,7 @@ class NormalScene(Scene):
             MenuItem("Behavior", icon=HAND_ICON, action=("train",)),
             MenuItem("Patience", icon=HAND_ICON, action=("train",)),
             MenuItem("Fitness", icon=HAND_ICON, action=("train",)),
-            MenuItem("sociability", icon=HAND_ICON, action=("train",)),
+            MenuItem("Sociability", icon=HAND_ICON, action=("train",)),
         ]
 
         # Build parent menu

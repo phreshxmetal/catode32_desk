@@ -12,6 +12,9 @@ class MeanderingBehavior(BaseBehavior):
         "energy": -0.5,
         "fullness": -1,
 
+        # Medium changes
+        "intelligence": -0.02,
+
         # Slow changers
         "fitness": 0.1
     }

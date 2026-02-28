@@ -23,7 +23,7 @@ class MischiefBehavior(BaseBehavior):
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": -2,
-        "focus": -2,
+        "focus": -1,
         "playfulness": -2,
 
         # Medium changers

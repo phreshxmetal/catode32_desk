@@ -37,14 +37,14 @@ class IdleBehavior(BaseBehavior):
 
         # Medium changers
         "fulfillment": -0.1,
-        "affection": -0.15,
+        "affection": -0.05,
         "curiosity": 0.025,
         "cleanliness": -0.2,
 
         # Slow changers
         "fitness": -0.03,
         "appetite": -0.01,
-        "craftiness": -0.03,
+        "craftiness": -0.01,
         "serenity": 0.01,
         "patience": -0.02,
     }

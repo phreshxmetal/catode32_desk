@@ -27,7 +27,7 @@ class HidingBehavior(BaseBehavior):
         "independence": -0.05,
         "sociability": -0.2,
         "resilience": -0.02,
-        "affection": -0.05,
+        "affection": -0.1,
 
         # Slow changers
         "patience": 0.75,

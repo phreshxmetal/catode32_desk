@@ -34,14 +34,13 @@ class PacingBehavior(BaseBehavior):
         # Medium changers
         "cleanliness": -0.5,
         "fulfillment": -0.1,
-        "affection": -1,
+        "affection": -0.5,
 
         # Slow changers
         "charisma": -0.25,
         "patience": 0.5,
         "fitness": 0.1,
         "resilience": -0.1,
-        "affection": -0.05,
         "loyalty": -0.03,
 
         # Extra slow changers

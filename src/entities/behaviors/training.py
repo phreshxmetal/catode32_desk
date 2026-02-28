@@ -24,7 +24,7 @@ class TrainingBehavior(BaseBehavior):
         "focus": -3,
 
         # Medium changers
-        "intelligence": 5,
+        "intelligence": 1,
         "resilience": 5,
         "sociability": 0.5,
         "fulfillment": 1,
@@ -38,6 +38,7 @@ class TrainingBehavior(BaseBehavior):
         "loyalty": 0.7,
         "dignity": 0.5,
         "mischievousness": -0.05,
+        "craftiness": 0.1,
     }
 
     @classmethod
