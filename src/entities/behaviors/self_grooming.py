@@ -75,7 +75,7 @@ class SelfGroomingBehavior(BaseBehavior):
             if self._phase_timer >= self.prepare_duration:
                 self._phase = "grooming"
                 self._phase_timer = 0.0
-                self._character.set_pose("sitting.forward.aloof")
+                self._character.set_pose("sitting_licking.side.licking_leg")
 
         elif self._phase == "grooming":
             self._progress = min(1.0, self._phase_timer / self.groom_duration)
