@@ -79,6 +79,7 @@ class GiftBringingBehavior(BaseBehavior):
                 self._phase = "satisfied"
                 self._phase_timer = 0.0
                 self._character.set_pose("sitting.side.happy")
+                self._character.play_bursts()
 
         elif self._phase == "satisfied":
             if self._phase_timer >= self.satisfy_duration:
