@@ -55,7 +55,7 @@ class TrainingBehavior(BaseBehavior):
         super().__init__(character)
         self.warmup_duration = 2.0
         self.train_duration = 12.0
-        self.cooldown_duration = 2.0
+        self.cooldown_duration = 5.0
         self._begging_pair = []
         self._begging_index = 0
         self._pose_timer = 0.0
@@ -108,7 +108,9 @@ class TrainingBehavior(BaseBehavior):
                 self._phase = "cooling_down"
                 self._phase_timer = 0.0
                 self._character.set_pose("sitting.side.looking_down")
+                self._character.play_bursts()
 
         elif self._phase == "cooling_down":
             if self._phase_timer >= self.cooldown_duration:
                 self.stop(completed=True)
+
