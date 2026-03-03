@@ -176,20 +176,16 @@ class ShootingStarEvent:
         if self.particle_timer > 0.12 and self.lifetime > self.grow_duration:
             self.particle_timer = 0
             tail_x, tail_y, _, _ = self.get_points()
-            self.particles.append({
-                "x": float(tail_x),
-                "y": float(tail_y),
-                "life": 0.0,
-            })
+            self.particles.append([float(tail_x), float(tail_y), 0.0])
 
         # Update particles - they slow down and fall
         for p in self.particles:
-            p["x"] += self.speed_x * 0.15 * dt  # Much slower horizontal
-            p["y"] += self.speed_y * 0.1 * dt  # Falls downward
-            p["life"] += dt
+            p[_SS_X] += self.speed_x * 0.15 * dt  # Much slower horizontal
+            p[_SS_Y] += self.speed_y * 0.1 * dt  # Falls downward
+            p[_SS_LIFE] += dt
 
         # Remove old particles
-        self.particles = [p for p in self.particles if p["life"] < 0.7]
+        self.particles = [p for p in self.particles if p[_SS_LIFE] < 0.7]
 
         if self.lifetime >= self.max_lifetime:
             self.active = False
@@ -252,6 +248,25 @@ RAIN_SPEED_X = 10   # Slight wind drift
 RAIN_STREAK_LENGTH = 3
 SNOW_SPEED_Y = 15
 SNOW_DRIFT_SPEED = 8  # Horizontal wobble amplitude
+
+# Particle list indices (replacing per-particle dicts)
+_SS_X    = 0  # ShootingStarEvent trailing particle: x
+_SS_Y    = 1  # y
+_SS_LIFE = 2  # age in seconds
+
+_P_X    = 0  # Precipitation particle: x (shared by rain & snow)
+_P_Y    = 1  # y (shared)
+
+# Rain particle layout: [x, y, speed_variance, x_variance, layer]
+_RAIN_SPEED_VAR = 2
+_RAIN_X_VAR     = 3
+_RAIN_LAYER     = 4
+
+# Snow particle layout: [x, y, drift_offset, drift_speed, speed_variance, layer]
+_SNOW_DRIFT_OFFSET = 2
+_SNOW_DRIFT_SPEED  = 3
+_SNOW_SPEED_VAR    = 4
+_SNOW_LAYER        = 5
 
 
 class SkyRenderer:
@@ -411,25 +426,29 @@ class SkyRenderer:
                     self._precip_particles.append(self._spawn_snow_particle(random_y=True, layer=layer))
 
     def _spawn_rain_particle(self, random_y=False, layer=None):
-        """Spawn a rain particle at top of screen (or random y for init)"""
-        return {
-            "x": random.random() * self.world_width,
-            "y": random.random() * config.DISPLAY_HEIGHT if random_y else -random.randint(0, 15),
-            "speed_variance": 0.7 + random.random() * 0.6,  # 0.7-1.3x speed
-            "x_variance": 0.8 + random.random() * 0.4,  # Vary horizontal drift too
-            "layer": layer if layer is not None else random.randint(0, 2),
-        }
+        """Spawn a rain particle at top of screen (or random y for init).
+        Layout: [x, y, speed_variance, x_variance, layer]
+        """
+        return [
+            random.random() * self.world_width,
+            random.random() * config.DISPLAY_HEIGHT if random_y else -random.randint(0, 15),
+            0.7 + random.random() * 0.6,
+            0.8 + random.random() * 0.4,
+            layer if layer is not None else random.randint(0, 2),
+        ]
 
     def _spawn_snow_particle(self, random_y=False, layer=None):
-        """Spawn a snow particle at top of screen (or random y for init)"""
-        return {
-            "x": random.random() * self.world_width,
-            "y": random.random() * config.DISPLAY_HEIGHT if random_y else -random.randint(0, 15),
-            "drift_offset": random.random() * 6.28,  # Random phase for sine drift
-            "drift_speed": 1.5 + random.random() * 2.0,  # Vary drift frequency
-            "speed_variance": 0.6 + random.random() * 0.8,  # 0.6-1.4x speed
-            "layer": layer if layer is not None else random.randint(0, 2),
-        }
+        """Spawn a snow particle at top of screen (or random y for init).
+        Layout: [x, y, drift_offset, drift_speed, speed_variance, layer]
+        """
+        return [
+            random.random() * self.world_width,
+            random.random() * config.DISPLAY_HEIGHT if random_y else -random.randint(0, 15),
+            random.random() * 6.28,
+            1.5 + random.random() * 2.0,
+            0.6 + random.random() * 0.8,
+            layer if layer is not None else random.randint(0, 2),
+        ]
 
     def _get_moon_sprite(self):
         """Get moon sprite with fill_frames expanded for all phases"""
@@ -581,39 +600,39 @@ class SkyRenderer:
         for p in self._precip_particles:
             if self.precipitation_type == "rain":
                 # Rain falls fast with slight horizontal drift (varied per particle)
-                p["y"] += RAIN_SPEED_Y * p["speed_variance"] * dt
-                p["x"] += RAIN_SPEED_X * p["x_variance"] * dt
+                p[_P_Y] += RAIN_SPEED_Y * p[_RAIN_SPEED_VAR] * dt
+                p[_P_X] += RAIN_SPEED_X * p[_RAIN_X_VAR] * dt
 
                 # Respawn at top when off bottom
-                if p["y"] > screen_bottom:
-                    p["y"] = -random.randint(0, 15)
-                    p["x"] = random.random() * self.world_width
-                    p["speed_variance"] = 0.7 + random.random() * 0.6
-                    p["x_variance"] = 0.8 + random.random() * 0.4
+                if p[_P_Y] > screen_bottom:
+                    p[_P_Y] = -random.randint(0, 15)
+                    p[_P_X] = random.random() * self.world_width
+                    p[_RAIN_SPEED_VAR] = 0.7 + random.random() * 0.6
+                    p[_RAIN_X_VAR] = 0.8 + random.random() * 0.4
 
                 # Wrap horizontally
-                if p["x"] > self.world_width:
-                    p["x"] -= self.world_width
+                if p[_P_X] > self.world_width:
+                    p[_P_X] -= self.world_width
 
             elif self.precipitation_type == "snow":
                 # Snow falls slowly with sinusoidal drift (varied frequency per particle)
-                p["y"] += SNOW_SPEED_Y * p["speed_variance"] * dt
-                drift = math.sin(self.elapsed_time * p["drift_speed"] + p["drift_offset"]) * SNOW_DRIFT_SPEED * dt
-                p["x"] += drift
+                p[_P_Y] += SNOW_SPEED_Y * p[_SNOW_SPEED_VAR] * dt
+                drift = math.sin(self.elapsed_time * p[_SNOW_DRIFT_SPEED] + p[_SNOW_DRIFT_OFFSET]) * SNOW_DRIFT_SPEED * dt
+                p[_P_X] += drift
 
                 # Respawn at top when off bottom
-                if p["y"] > screen_bottom:
-                    p["y"] = -random.randint(0, 15)
-                    p["x"] = random.random() * self.world_width
-                    p["drift_offset"] = random.random() * 6.28
-                    p["drift_speed"] = 1.5 + random.random() * 2.0
-                    p["speed_variance"] = 0.6 + random.random() * 0.8
+                if p[_P_Y] > screen_bottom:
+                    p[_P_Y] = -random.randint(0, 15)
+                    p[_P_X] = random.random() * self.world_width
+                    p[_SNOW_DRIFT_OFFSET] = random.random() * 6.28
+                    p[_SNOW_DRIFT_SPEED] = 1.5 + random.random() * 2.0
+                    p[_SNOW_SPEED_VAR] = 0.6 + random.random() * 0.8
 
                 # Wrap horizontally
-                if p["x"] < 0:
-                    p["x"] += self.world_width
-                elif p["x"] > self.world_width:
-                    p["x"] -= self.world_width
+                if p[_P_X] < 0:
+                    p[_P_X] += self.world_width
+                elif p[_P_X] > self.world_width:
+                    p[_P_X] -= self.world_width
 
     def _update_lightning(self, dt):
         """Update lightning effect state"""
@@ -760,7 +779,7 @@ class SkyRenderer:
         if self.shooting_star and self.shooting_star.active:
             # Draw trailing particles first (behind the main streak)
             for p in self.shooting_star.particles:
-                px, py = int(p["x"]), int(p["y"])
+                px, py = int(p[_SS_X]), int(p[_SS_Y])
                 if 0 <= px < config.DISPLAY_WIDTH and 0 <= py < 50:
                     renderer.draw_pixel(px, py)
 
@@ -791,14 +810,15 @@ class SkyRenderer:
 
         camera_offset = int(camera_x * parallax)
 
+        p_layer = _RAIN_LAYER if self.precipitation_type == "rain" else _SNOW_LAYER
         for p in self._precip_particles:
             # Only draw particles assigned to this layer
-            if p["layer"] != layer_index:
+            if p[p_layer] != layer_index:
                 continue
 
             # Apply parallax to x position
-            screen_x = int(p["x"] - camera_offset)
-            screen_y = int(p["y"])
+            screen_x = int(p[_P_X] - camera_offset)
+            screen_y = int(p[_P_Y])
 
             # Wrap for screen visibility
             while screen_x < 0:
