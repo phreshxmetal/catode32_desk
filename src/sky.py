@@ -101,13 +101,19 @@ TWINKLE_CYCLE_LENGTH = 12
 TWINKLE_SMALL_PHASES = (8, 9, 11)  # Growing and shrinking
 TWINKLE_LARGE_PHASE = 10          # Peak twinkle
 
+# Star tuple field indices
+_STAR_X = 0
+_STAR_Y = 1
+_STAR_TWINKLE = 2
+_STAR_PHASE = 3
+
 
 def _generate_stars():
     """
     Generate deterministic star positions using xorshift PRNG.
 
     Returns:
-        List of star dicts: {"x": int, "y": int, "twinkle": bool, "phase_offset": int}
+        List of star tuples: (x, y, twinkle, phase_offset)
     """
     stars = []
     state = STAR_SEED
@@ -119,8 +125,8 @@ def _generate_stars():
         state = _xorshift32(state)
         twinkle = (state % 100) < int(TWINKLE_RATIO * 100)
         state = _xorshift32(state)
-        phase_offset = state % TWINKLE_CYCLE_LENGTH  # Each star starts at different phase
-        stars.append({"x": x, "y": y, "twinkle": twinkle, "phase_offset": phase_offset})
+        phase_offset = state % TWINKLE_CYCLE_LENGTH
+        stars.append((x, y, twinkle, phase_offset))
     return stars
 
 
@@ -719,9 +725,9 @@ class SkyRenderer:
                     continue
 
             # Calculate position with offset and wrapping
-            world_x = (star["x"] + offset_x) % STAR_FIELD_WIDTH
+            world_x = (star[_STAR_X] + offset_x) % STAR_FIELD_WIDTH
             screen_x = int(world_x - camera_offset)
-            screen_y = star["y"]
+            screen_y = star[_STAR_Y]
 
             # Skip if off-screen
             if screen_x < 0 or screen_x >= config.DISPLAY_WIDTH:
@@ -730,8 +736,8 @@ class SkyRenderer:
                 continue
 
             # Draw star with twinkle effect (each star has its own phase offset)
-            if star["twinkle"]:
-                star_phase = (self.twinkle_phase + star["phase_offset"]) % TWINKLE_CYCLE_LENGTH
+            if star[_STAR_TWINKLE]:
+                star_phase = (self.twinkle_phase + star[_STAR_PHASE]) % TWINKLE_CYCLE_LENGTH
                 if star_phase == TWINKLE_LARGE_PHASE:
                     # Large twinkle - cross shape
                     renderer.draw_pixel(screen_x, screen_y)
