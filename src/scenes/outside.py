@@ -10,8 +10,8 @@ from entities.behaviors.playing import PlayingBehavior
 from entities.behaviors.being_groomed import BeingGroomedBehavior
 from entities.behaviors.training import TrainingBehavior
 from menu import Menu, MenuItem
-from assets.icons import TOYS_ICON, HAND_ICON, KIBBLE_ICON, TOY_ICONS
-from assets.items import TREAT_PILE
+from assets.icons import TOYS_ICON, HEART_ICON, HEART_BUBBLE_ICON, HAND_ICON, KIBBLE_ICON, TOY_ICONS, SNACK_ICONS, FISH_ICON, CHICKEN_ICON, MEAL_ICON
+from assets.items import FISH1, BOX_SMALL_1, PLANTER_SMALL_1, FOOD_BOWL, TREAT_PILE
 from assets.nature import PLANT1, PLANTER1, PLANT2
 from sky import SkyRenderer
 
@@ -159,23 +159,54 @@ class OutsideScene(Scene):
         return None
 
     def _build_menu_items(self):
-        """Build context-aware menu items for outside"""
-        items = [
-            MenuItem("Give pets", icon=HAND_ICON, action=("pets",)),
-            MenuItem("Groom", icon=HAND_ICON, action=("groom",)),
-            MenuItem("Train", icon=HAND_ICON, action=("train",)),
-            MenuItem("Point at bird", icon=HAND_ICON, action=("point_bird",)),
-            MenuItem("Throw stick", icon=HAND_ICON, action=("throw_stick",)),
-            MenuItem("Give treat", icon=KIBBLE_ICON, action=("treat",)),
+        """Build context-aware menu items"""
+
+        # Affection submenu
+        affection_items = [
+            MenuItem("Pets", icon=HAND_ICON, action=("pets",)),
+            MenuItem("Kiss", icon=HEART_ICON, action=("kiss",)),
+            MenuItem("Psst psst", icon=HEART_BUBBLE_ICON, action=("psst",)),
+            MenuItem("Groom", icon=HAND_ICON, action=("groom",))
         ]
 
+        # Feed submenu
+        meal_items = [
+            MenuItem("Chicken", icon=CHICKEN_ICON, action=("meal", "chicken")),
+            MenuItem("Fish", icon=FISH_ICON, action=("meal", "fish")),
+        ]
+        snack_items = [
+            MenuItem(snack["name"], icon=SNACK_ICONS.get(snack["name"]), action=("snack", snack))
+            for snack in self.context.inventory.get("snacks", [])
+        ]
+        feed_items = [
+            MenuItem("Meals", icon=MEAL_ICON, submenu=meal_items),
+            MenuItem("Snacks", icon=KIBBLE_ICON, submenu=snack_items),
+        ]
+
+        # Toys submenu
         toy_items = [
             MenuItem(toy["name"], icon=TOY_ICONS.get(toy["name"]), action=("toy", toy))
             for toy in self.context.inventory.get("toys", [])
-            if toy["name"] in ["Feather", "Laser"]
         ]
+
+        # Train submenu
+        train_items = [
+            MenuItem("Intelligence", icon=HAND_ICON, action=("train",)),
+            MenuItem("Behavior", icon=HAND_ICON, action=("train",)),
+            MenuItem("Patience", icon=HAND_ICON, action=("train",)),
+            MenuItem("Fitness", icon=HAND_ICON, action=("train",)),
+            MenuItem("Sociability", icon=HAND_ICON, action=("train",)),
+        ]
+
+        # Build parent menu
+        items = [
+            MenuItem("Affection", icon=HEART_ICON, submenu=affection_items),
+            MenuItem("Train", icon=HAND_ICON, submenu=train_items),
+            MenuItem("Feed", icon=MEAL_ICON, submenu=feed_items),
+        ]
+        
         if toy_items:
-            items.append(MenuItem("Play with toy", icon=TOYS_ICON, submenu=toy_items))
+            items.append(MenuItem("Play", icon=TOYS_ICON, submenu=toy_items))
 
         return items
 
@@ -186,17 +217,19 @@ class OutsideScene(Scene):
 
         action_type = action[0]
 
-        if action_type == "pets":
+        if action_type == "meal":
+            self.character.trigger(EatingBehavior, FOOD_BOWL, action[1])
+        elif action_type == "kiss":
+            self.character.trigger(AffectionBehavior, variant="kiss")
+        elif action_type == "pets":
             self.character.trigger(AffectionBehavior, variant="pets")
-        elif action_type == "point_bird":
-            self.character.trigger(AttentionBehavior, variant="point_bird")
-        elif action_type == "throw_stick":
-            self.character.trigger(PlayingBehavior, variant="throw_stick")
-        elif action_type == "treat":
+        elif action_type == "psst":
+            self.character.trigger(AttentionBehavior, variant="psst")
+        elif action_type == "snack":
             self.character.trigger(EatingBehavior, TREAT_PILE, "treat")
+        elif action_type == "toy":
+            self.character.trigger(PlayingBehavior, variant=action[1]["variant"])
         elif action_type == "groom":
             self.character.trigger(BeingGroomedBehavior)
         elif action_type == "train":
             self.character.trigger(TrainingBehavior)
-        elif action_type == "toy":
-            self.character.trigger(PlayingBehavior, variant=action[1]["variant"])
