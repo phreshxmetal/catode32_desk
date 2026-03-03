@@ -65,7 +65,6 @@ class OutsideScene(Scene):
 
         # Create character with context for behavior management
         self.character = CharacterEntity(64, 64, context=self.context)
-        self.character.mirror = True  # default facing left outdoors
         butterfly1 = ButterflyEntity(110, 20)
         butterfly2 = ButterflyEntity(50, 30)
         butterfly2.anim_speed = 10
@@ -132,7 +131,6 @@ class OutsideScene(Scene):
         # Draw environment with all layers and parallax
         self.environment.draw(self.renderer)
 
-        # Draw character separately (needs mirror control)
         camera_offset = int(self.environment.camera_x)
         self.character.draw(self.renderer, mirror=self.character.mirror, camera_offset=camera_offset)
 

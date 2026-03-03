@@ -1,5 +1,6 @@
 from entities.entity import Entity
 from assets.character import POSES
+from sprite_transform import mirror_sprite_h
 
 
 def get_pose(pose_name):
@@ -39,6 +40,7 @@ class CharacterEntity(Entity):
         self.context = context
 
         self.mirror = False  # True = facing left, False = facing right
+        self._mirror_cache = {}  # id(sprite) -> {"frames": [...], "fill_frames": [...]}
 
         self.anim_body = 0.0
         self.anim_head = 0.0
@@ -80,6 +82,7 @@ class CharacterEntity(Entity):
         if pose is not None:
             self.pose_name = pose_name
             self._pose = pose
+            self._mirror_cache = {}  # Invalidate cached mirrored frames for new pose
         else:
             print(f"[character] Failed to set pose: '{pose_name}', keeping current pose")
 
@@ -152,6 +155,25 @@ class CharacterEntity(Entity):
         if self.current_behavior and self.context:
             self.current_behavior.update(dt)
 
+    def _ensure_mirrored(self, sprite):
+        """Return cached dict of pre-mirrored frame bytearrays for this sprite."""
+        sid = id(sprite)
+        if sid not in self._mirror_cache:
+            w, h = sprite["width"], sprite["height"]
+            entry = {"frames": [mirror_sprite_h(f, w, h) for f in sprite["frames"]]}
+            if "fill_frames" in sprite:
+                entry["fill_frames"] = [mirror_sprite_h(f, w, h) for f in sprite["fill_frames"]]
+            self._mirror_cache[sid] = entry
+        return self._mirror_cache[sid]
+
+    def _draw_part_mirrored(self, renderer, sprite, x, y, frame):
+        """Draw a sprite part using cached pre-mirrored frames (no per-frame allocation)."""
+        cached = self._ensure_mirrored(sprite)
+        if "fill_frames" in sprite:
+            renderer.draw_sprite(cached["fill_frames"][frame], sprite["width"], sprite["height"],
+                                 x, y, transparent=True, invert=True, transparent_color=1)
+        renderer.draw_sprite(cached["frames"][frame], sprite["width"], sprite["height"], x, y)
+
     def draw(self, renderer, mirror=False, camera_offset=0, eye_frame=None):
         """Draw the character at its position.
 
@@ -200,17 +222,25 @@ class CharacterEntity(Entity):
         tail_x = tail_root_x - self._get_anchor_x(tail, mirror)
         tail_y = tail_root_y - tail["anchor_y"]
 
-        # Draw the parts
-        renderer.draw_sprite_obj(tail, tail_x, tail_y, frame=tail_frame, mirror_h=mirror)
-
-        if pose.get("head_first") == True:
-            renderer.draw_sprite_obj(head, head_x, head_y, frame=head_frame, mirror_h=mirror)
-            renderer.draw_sprite_obj(body, body_x, body_y, frame=body_frame, mirror_h=mirror)
+        # Draw the parts — use cached mirrored frames to avoid per-frame allocation
+        if mirror:
+            self._draw_part_mirrored(renderer, tail, tail_x, tail_y, tail_frame)
+            if pose.get("head_first"):
+                self._draw_part_mirrored(renderer, head, head_x, head_y, head_frame)
+                self._draw_part_mirrored(renderer, body, body_x, body_y, body_frame)
+            else:
+                self._draw_part_mirrored(renderer, body, body_x, body_y, body_frame)
+                self._draw_part_mirrored(renderer, head, head_x, head_y, head_frame)
+            self._draw_part_mirrored(renderer, eyes, eye_x, eye_y, eye_frame_idx)
         else:
-            renderer.draw_sprite_obj(body, body_x, body_y, frame=body_frame, mirror_h=mirror)
-            renderer.draw_sprite_obj(head, head_x, head_y, frame=head_frame, mirror_h=mirror)
-
-        renderer.draw_sprite_obj(eyes, eye_x, eye_y, frame=eye_frame_idx, mirror_h=mirror)
+            renderer.draw_sprite_obj(tail, tail_x, tail_y, frame=tail_frame)
+            if pose.get("head_first"):
+                renderer.draw_sprite_obj(head, head_x, head_y, frame=head_frame)
+                renderer.draw_sprite_obj(body, body_x, body_y, frame=body_frame)
+            else:
+                renderer.draw_sprite_obj(body, body_x, body_y, frame=body_frame)
+                renderer.draw_sprite_obj(head, head_x, head_y, frame=head_frame)
+            renderer.draw_sprite_obj(eyes, eye_x, eye_y, frame=eye_frame_idx)
 
         # Draw active behavior's visual effects (bubbles, etc.)
         if self.current_behavior:
