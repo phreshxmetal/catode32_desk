@@ -40,7 +40,7 @@ class GameContext:
             "toys": [
                 {"name": "Feather", "variant": "toy"},
                 {"name": "Yarn ball", "variant": "ball"},
-                {"name": "Laser", "variant": "toy"},
+                {"name": "Laser", "variant": "laser"},
             ],
             "snacks": [
                 {"name": "Treat"},

@@ -21,6 +21,10 @@ VARIANTS = {
         "stats": {"playfulness": -3, "energy": -8, "focus": -2},
         "passes": 4,  # number of half-passes (direction changes) before pouncing
     },
+    "laser": {
+        "stats": {"playfulness": -3, "energy": -7, "focus": -3},
+        "passes": 4,
+    },
 }
 
 # Shared pounce constants (reusable across play variants)
@@ -32,6 +36,14 @@ BALL_ROLL_SPEED = 25           # pixels per second
 BALL_ROLL_RANGE = 28           # max horizontal offset left/right from cat center
 BALL_Y_OFFSET = 8              # pixels above cat's y anchor
 BALL_CATCH_DURATION = 1.5      # seconds of celebration after catching
+
+# Laser variant constants
+LASER_SPEED = 35               # pixels per second (slightly snappier than the ball)
+LASER_RANGE = 28               # max horizontal offset left/right from cat center
+LASER_Y_OFFSET = 1             # pixels above cat's y anchor
+LASER_CATCH_DURATION = 1.5     # seconds of celebration after catching
+LASER_DOT_RADIUS = 2           # radius in pixels → 5×5 filled circle
+LASER_LINE_TOP_Y = -64         # y coordinate of the off-screen line origin
 
 
 def _compute_eye_frame(ball_offset_x, mirror):
@@ -102,6 +114,12 @@ class PlayingBehavior(BaseBehavior):
         self._ball_direction = 1    # 1 = rolling right, -1 = rolling left
         self._ball_passes_left = 4
 
+        # Laser variant state
+        self._laser_offset_x = 0.0  # horizontal offset from character.x
+        self._laser_direction = 1   # 1 = moving right, -1 = moving left
+        self._laser_passes_left = 4
+        self._laser_line_x_top = 64  # fixed screen-space x for the off-screen line end
+
         # Shared pounce state
         self._pounce_direction = 1
 
@@ -135,11 +153,26 @@ class PlayingBehavior(BaseBehavior):
 
         if self._variant == "ball":
             self._start_ball()
+        elif self._variant == "laser":
+            self._start_laser()
         else:
             config = VARIANTS[self._variant]
             self._bubble = config.get("bubble")
             self._phase = "excited"
             self._character.set_pose("sitting.side.happy")
+
+    def _start_laser(self):
+        """Initialise the laser variant state and enter the watching phase."""
+        config = VARIANTS["laser"]
+        self._laser_passes_left = config.get("passes", 4)
+        self._laser_offset_x = LASER_RANGE   # start on the right side
+        self._laser_direction = -1            # move left first
+        self._laser_line_x_top = random.randint(20, 108)
+        self._eye_frame_override = _compute_eye_frame(
+            self._laser_offset_x, self._character.mirror
+        )
+        self._phase = "watching"
+        self._character.set_pose("playful.forward.wowed")
 
     def _start_ball(self):
         """Initialise the ball variant state and enter the watching phase."""
@@ -165,6 +198,8 @@ class PlayingBehavior(BaseBehavior):
 
         if self._variant == "ball":
             self._update_ball(dt)
+        elif self._variant == "laser":
+            self._update_laser(dt)
         else:
             self._update_default(dt)
 
@@ -238,17 +273,66 @@ class PlayingBehavior(BaseBehavior):
         done = total - self._ball_passes_left
         self._progress = min(0.9, done / total)
 
+    # --- Laser variant ---
+
+    def _update_laser(self, dt):
+        if self._phase == "watching":
+            self._update_laser_rolling(dt)
+        elif self._phase == "pouncing":
+            self._update_pounce(dt)
+        elif self._phase == "catching":
+            if self._phase_timer >= LASER_CATCH_DURATION:
+                self._progress = 1.0
+                self.stop(completed=True)
+
+    def _update_laser_rolling(self, dt):
+        """Advance the laser dot and update eye tracking each frame."""
+        self._laser_offset_x += self._laser_direction * LASER_SPEED * dt
+
+        # Update eye tracking
+        self._eye_frame_override = _compute_eye_frame(
+            self._laser_offset_x, self._character.mirror
+        )
+
+        # Check if the dot reached a boundary
+        if self._laser_direction > 0 and self._laser_offset_x >= LASER_RANGE:
+            self._laser_offset_x = LASER_RANGE
+            self._laser_passes_left -= 1
+            if self._laser_passes_left <= 0:
+                self._begin_pounce(self._laser_offset_x)
+            else:
+                self._laser_direction = -1
+
+        elif self._laser_direction < 0 and self._laser_offset_x <= -LASER_RANGE:
+            self._laser_offset_x = -LASER_RANGE
+            self._laser_passes_left -= 1
+            if self._laser_passes_left <= 0:
+                self._begin_pounce(self._laser_offset_x)
+            else:
+                self._laser_direction = 1
+
+        # Track overall progress (watching counts as 0–90%)
+        total = VARIANTS["laser"].get("passes", 4)
+        done = total - self._laser_passes_left
+        self._progress = min(0.9, done / total)
+
     # ------------------------------------------------------------------
     # Shared pounce helpers — reusable for other play variants
     # ------------------------------------------------------------------
 
-    def _begin_pounce(self):
+    def _begin_pounce(self, offset_x=None):
         """Transition into the pouncing phase (reusable for any play variant).
 
-        Turns the cat to face the ball's side, sets the pounce pose, and
+        Turns the cat to face the target's side, sets the pounce pose, and
         releases the eye-tracking override so the side-facing pose looks correct.
+
+        Args:
+            offset_x: Horizontal offset of the target from the cat. Defaults to
+                       the ball's current offset when not provided.
         """
-        self._pounce_direction = 1 if self._ball_offset_x >= 0 else -1
+        if offset_x is None:
+            offset_x = self._ball_offset_x
+        self._pounce_direction = 1 if offset_x >= 0 else -1
         self._character.mirror = self._pounce_direction > 0
         self._character.set_pose("leaning_forward.side.pounce")
         self._eye_frame_override = None
@@ -276,6 +360,8 @@ class PlayingBehavior(BaseBehavior):
 
         if self._variant == "ball":
             self._draw_ball(renderer, char_x, char_y)
+        elif self._variant == "laser":
+            self._draw_laser(renderer, char_x, char_y)
         elif self._bubble and self._phase == "excited":
             progress = min(1.0, self._phase_timer / self.excited_duration)
             draw_bubble(renderer, self._bubble, char_x, char_y, progress, mirror)
@@ -299,3 +385,26 @@ class PlayingBehavior(BaseBehavior):
             frame=0,
             rotate=int(self._ball_rotation),
         )
+
+    def _draw_laser(self, renderer, char_x, char_y):
+        """Draw the laser dot and beam line.
+
+        During watching: draws a line from an off-screen point to the dot,
+        then fills a 5×5 circle at the dot position.
+        During pouncing: draws only the dot (line source is out of frame anyway).
+        """
+        if self._phase not in ("watching", "pouncing"):
+            return
+
+        dot_x = char_x + int(self._laser_offset_x)
+        dot_y = char_y - LASER_Y_OFFSET
+
+        # Draw the beam line only while the cat is still watching
+        if self._phase == "watching":
+            renderer.draw_line(
+                self._laser_line_x_top, LASER_LINE_TOP_Y,
+                dot_x, dot_y,
+            )
+
+        # Draw the 5×5 laser dot as a filled circle
+        renderer.draw_circle(dot_x, dot_y, LASER_DOT_RADIUS, filled=True)

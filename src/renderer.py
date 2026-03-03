@@ -94,6 +94,38 @@ class Renderer:
         """
         self.display.pixel(x, y, color)
 
+    def draw_circle(self, cx, cy, radius, filled=False, color=1):
+        """Draw a circle using Bresenham's midpoint algorithm.
+
+        Args:
+            cx, cy: centre coordinates
+            radius: radius in pixels
+            filled: if True, fills the circle; if False, draws outline only
+            color: 1 for white (default), 0 for black
+        """
+        x, y, err = radius, 0, 1 - radius
+        while x >= y:
+            if filled:
+                self.display.hline(cx - x, cy + y, 2 * x + 1, color)
+                self.display.hline(cx - x, cy - y, 2 * x + 1, color)
+                self.display.hline(cx - y, cy + x, 2 * y + 1, color)
+                self.display.hline(cx - y, cy - x, 2 * y + 1, color)
+            else:
+                self.display.pixel(cx + x, cy + y, color)
+                self.display.pixel(cx - x, cy + y, color)
+                self.display.pixel(cx + x, cy - y, color)
+                self.display.pixel(cx - x, cy - y, color)
+                self.display.pixel(cx + y, cy + x, color)
+                self.display.pixel(cx - y, cy + x, color)
+                self.display.pixel(cx + y, cy - x, color)
+                self.display.pixel(cx - y, cy - x, color)
+            y += 1
+            if err < 0:
+                err += 2 * y + 1
+            else:
+                x -= 1
+                err += 2 * (y - x) + 1
+
     def draw_polygon(self, points, color=1):
         """Draw a polygon outline
 
