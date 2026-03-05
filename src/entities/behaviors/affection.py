@@ -14,8 +14,9 @@ VARIANTS = {
         "stats": {
             "affection": 5,
             "fulfillment": 2,
-            "comfort": 2,
+            "comfort": 4,
             "focus": 2,
+            "playfulness": 1,
             "fulfillment": 0.5,
             "sociability": 0.5,
             "serenity": 0.2,
@@ -30,8 +31,9 @@ VARIANTS = {
         "stats": {
             "affection": 2.5,
             "fulfillment": 1,
-            "comfort": 2,
+            "comfort": 3,
             "focus": 1,
+            "playfulness": 3,
             "fulfillment": 0.5,
             "sociability": 0.5,
             "serenity": 0.2,

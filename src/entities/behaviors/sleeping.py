@@ -33,7 +33,7 @@ class SleepingBehavior(BaseBehavior):
         # Rapid changers
         "energy": 45,
         "focus": 10,
-        "comfort": 3,
+        "comfort": 7,
         "playfulness": 27,
         "fullness": -5,
 

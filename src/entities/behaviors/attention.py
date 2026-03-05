@@ -20,7 +20,7 @@ VARIANTS = {
         "stats": {
             "curiosity": 2,
             "playfulness": 0.5,
-            "focus": 0.5,
+            "focus": 1.5,
             "curiosity": 0.5,
         },
     },
@@ -28,7 +28,7 @@ VARIANTS = {
         "stats": {
             "curiosity": 3,
             "playfulness": 0.5,
-            "focus": 0.5,
+            "focus": 2,
             "curiosity": 0.5,
         },
     },

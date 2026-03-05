@@ -26,7 +26,7 @@ class SulkingBehavior(BaseBehavior):
 
     COMPLETION_BONUS = {
         # Rapid changers
-        "comfort": 0.25,
+        "comfort": 0.2,
 
         # Medium changers
         "curiosity": 0.05,

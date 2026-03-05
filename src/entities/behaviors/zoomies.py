@@ -27,6 +27,7 @@ class ZoomiesBehavior(BaseBehavior):
         # Medium changers
         "cleanliness": -0.5,
         "maturity": -0.1,
+        "comfort": -0.2,
 
         # Slow changers
         "fitness": 0.15,
