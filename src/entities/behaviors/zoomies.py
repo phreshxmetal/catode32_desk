@@ -21,7 +21,7 @@ class ZoomiesBehavior(BaseBehavior):
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": -4,
-        "fullness": -2,
+        "fullness": -0.5,
         "playfulness": -0.3,
 
         # Medium changers

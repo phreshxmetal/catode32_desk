@@ -12,7 +12,7 @@ VARIANTS = {
         "bubble": "heart",
         "duration": 6.5,
         "stats": {
-            "affection": 5,
+            "affection": 8,
             "fulfillment": 2,
             "comfort": 4,
             "focus": 2,
@@ -29,7 +29,7 @@ VARIANTS = {
         "bubble": "heart",
         "duration": 6.0,
         "stats": {
-            "affection": 2.5,
+            "affection": 4,
             "fulfillment": 1,
             "comfort": 3,
             "focus": 1,

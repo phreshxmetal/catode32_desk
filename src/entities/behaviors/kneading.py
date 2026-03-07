@@ -51,6 +51,8 @@ class KneadingBehavior(BaseBehavior):
         super().start(on_complete)
         self._phase = "kneading"
         self._character.set_pose("kneading.side.neutral")
+        self.knead_duration = self.knead_duration * random.uniform(1.0, 2.0)
+        self.settle_duration = self.settle_duration * random.uniform(1.0, 2.0)
 
     def update(self, dt):
         if not self._active:

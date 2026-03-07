@@ -10,7 +10,7 @@ class MeanderingBehavior(BaseBehavior):
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": -0.5,
-        "fullness": -1,
+        "fullness": -0.25,
         "playfulness": -0.8,
         "comfort": -1,
 

@@ -28,7 +28,7 @@ class IdleBehavior(BaseBehavior):
 
     COMPLETION_BONUS = {
         # Rapid changers
-        "fullness": -0.15,
+        "fullness": -0.05,
         "energy": -0.2,
         "comfort": -0.7,
         "playfulness": -0.9,
@@ -60,7 +60,7 @@ class IdleBehavior(BaseBehavior):
         super().start(on_complete)
         self._phase = "idling"
         self._pick_new_pose()
-        self._idle_for = random.uniform(self.min_pose_duration, self.max_pose_duration)
+        self._idle_for = random.uniform(self.min_pose_duration, self.max_pose_duration * 2.0)
 
     def update(self, dt):
         if not self._active:

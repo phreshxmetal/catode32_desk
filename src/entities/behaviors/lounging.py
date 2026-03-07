@@ -20,7 +20,7 @@ class LoungeingBehavior(BaseBehavior):
 
     COMPLETION_BONUS = {
         # Rapid changers
-        "fullness": -0.1,
+        "fullness": -0.025,
         "energy": -0.3,
         "comfort": 1,
         "focus": -1,
