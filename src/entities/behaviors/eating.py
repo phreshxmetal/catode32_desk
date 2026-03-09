@@ -1,6 +1,5 @@
 """Eating behavior for the character entity."""
 
-import random
 from entities.behaviors.base import BaseBehavior
 
 
@@ -27,10 +26,6 @@ class EatingBehavior(BaseBehavior):
     DEFAULT_FOOD_CONFIG = {"stats": {"fullness": 8}, "eating_speed": 0.4}
 
     FOOD_OFFSET_X = 34  # Horizontal offset of food from character anchor
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(5, max(5, context.fullness * 0.15))
 
     def __init__(self, character):
         super().__init__(character)

@@ -30,10 +30,6 @@ class KneadingBehavior(BaseBehavior):
         "serenity": 0.2,
     }
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(20, max(20, 100 - context.serenity))
-
     def __init__(self, character):
         super().__init__(character)
 

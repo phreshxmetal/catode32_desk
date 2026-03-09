@@ -36,10 +36,6 @@ class MischiefBehavior(BaseBehavior):
         "loyalty": -0.2,
     }
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(20, max(20, (200 - context.mischievousness - context.playfulness) * 0.5))
-
     def __init__(self, character):
         super().__init__(character)
         self.plot_duration = 1.5

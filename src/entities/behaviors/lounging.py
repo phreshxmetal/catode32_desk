@@ -34,24 +34,6 @@ class LoungeingBehavior(BaseBehavior):
         "fitness": -0.05,
     }
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.focus > 30 and context.serenity > 30
-
-        if not trigger:
-            failures = []
-            if context.focus <= 30:
-                failures.append("Focus: %6.2f" % context.focus)
-            if context.serenity <= 30:
-                failures.append("Serenity: %6.2f" % context.serenity)
-            print("Skipping lounging. " + ", ".join(failures))
-
-        return trigger
-    
-    @classmethod
-    def get_priority(cls, context):
-        return 100 - random.uniform(context.serenity, context.serenity * 2.0)
-
     LOUNGE_POSES = [
         "laying.side.neutral",
         "laying.side.neutral2",

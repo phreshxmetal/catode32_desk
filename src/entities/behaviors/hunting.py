@@ -45,33 +45,6 @@ class HuntingBehavior(BaseBehavior):
         "mischievousness": 0.02,
     }
 
-    @classmethod
-    def can_trigger(cls, context):
-        # Survival instinct: a starving pet will hunt regardless of mood
-        if context.fullness < 15 and context.energy > 20:
-            return True
-
-        trigger = context.energy > 20 and context.playfulness > 20
-
-        if not trigger:
-            failures = []
-            if context.energy <= 20:
-                failures.append("Energy: %6.4f" % context.energy)
-            if context.playfulness <= 20:
-                failures.append("Playfulness: %6.4f" % context.playfulness)
-            print("Skipping hunting. " + ", ".join(failures))
-
-        return trigger
-
-    @classmethod
-    def get_priority(cls, context):
-        # Survival instinct: starvation overrides normal priority calculation
-        if context.fullness < 15 and context.energy > 20:
-            return random.uniform(5, 15)
-        upper = max(20, (100 - context.energy) * 0.7 + (100 - context.playfulness) * 0.5)
-        hunger_bonus = (100 - context.fullness) * 0.3
-        return random.uniform(10, max(10, upper - hunger_bonus * 0.5))
-
     def __init__(self, character):
         super().__init__(character)
         self.stalk_duration = 3.0

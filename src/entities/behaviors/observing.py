@@ -19,19 +19,6 @@ class ObservingBehavior(BaseBehavior):
 
     NAME = "observing"
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.curiosity >= 30
-
-        if not trigger:
-            print("Skipping observing. Curiosity: %6.4f" % context.curiosity)
-
-        return trigger
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(10, max(10, 100 - context.curiosity))
-
     COMPLETION_BONUS = {
         # Rapid changers
         "focus": -0.6,

@@ -1,6 +1,5 @@
 """Hiding behavior - pet tucks away somewhere quiet until it feels better."""
 
-import random
 from entities.behaviors.base import BaseBehavior
 
 
@@ -30,10 +29,6 @@ class HidingBehavior(BaseBehavior):
         # Extra slow changers
         "courage": -0.3,
     }
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(15, max(15, context.courage))
 
     def __init__(self, character):
         super().__init__(character)

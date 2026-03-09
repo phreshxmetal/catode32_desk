@@ -38,10 +38,6 @@ class TrainingBehavior(BaseBehavior):
         "mischievousness": -0.05,
     }
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(3, max(3, context.energy * 0.08))
-
     BEGGING_POSES = [
         "begging.side.arm_up",
         "begging.side.arm_up2",

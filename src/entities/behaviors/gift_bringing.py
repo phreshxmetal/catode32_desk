@@ -1,6 +1,5 @@
 """Gift bringing behavior - pet proudly presents a found treasure."""
 
-import random
 from entities.behaviors.base import BaseBehavior
 
 
@@ -30,10 +29,6 @@ class GiftBringingBehavior(BaseBehavior):
     }
 
     GIFT_OFFSET_X = 30
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(10, max(10, (200 - context.sociability - context.affection) * 0.3))
 
     def __init__(self, character):
         super().__init__(character)

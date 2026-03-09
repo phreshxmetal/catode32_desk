@@ -252,10 +252,10 @@ class BehaviorManager:
         return trigger
 
     def can_trigger_self_grooming(self, ctx):
-        trigger = ctx.cleanliness < 70 and ctx.energy > 30
+        trigger = ctx.cleanliness < 57 and ctx.energy > 30
         if not trigger:
             failures = []
-            if ctx.cleanliness >= 70:
+            if ctx.cleanliness >= 57:
                 failures.append("Cleanliness: %6.4f" % ctx.cleanliness)
             if ctx.energy <= 30:
                 failures.append("Energy: %6.4f" % ctx.energy)
@@ -365,7 +365,7 @@ class BehaviorManager:
         return random.uniform(10, max(10, 100 - ctx.curiosity))
 
     def priority_self_grooming(self, ctx):
-        return random.uniform(0, ctx.cleanliness * 1.5) + random.uniform(0, max(10, ctx.energy * 0.25))
+        return random.uniform(ctx.cleanliness * 0.5, ctx.cleanliness * 1.5) + random.uniform(0, max(10, ctx.energy * 0.25))
 
     def priority_stretching(self, ctx):
         return random.uniform(10, max(10, ctx.comfort))

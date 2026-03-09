@@ -38,10 +38,6 @@ class BeingGroomedBehavior(BaseBehavior):
         "mischievousness": -0.1,
     }
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(3, max(3, context.cleanliness * 0.1))
-
     def __init__(self, character):
         super().__init__(character)
         self.accept_duration = 1.5
@@ -49,7 +45,7 @@ class BeingGroomedBehavior(BaseBehavior):
         self.satisfy_duration = 1.5
 
     def next(self, context):
-        # Inline SelfGroomingBehavior.can_trigger: cleanliness < 70 and energy > 30
+        # Inline self-grooming trigger: cleanliness < 57 and energy > 30
         if context.cleanliness < 70 and context.energy > 30 and random.random() < 0.4:
             return 'self_grooming'
         return None

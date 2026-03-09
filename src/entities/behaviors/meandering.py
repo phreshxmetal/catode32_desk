@@ -21,18 +21,6 @@ class MeanderingBehavior(BaseBehavior):
         "fitness": 0.025
     }
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.energy > 20
-
-        if not trigger:
-            failures = []
-            if context.energy <= 20:
-                failures.append("Energy: %6.4f" % context.comfort)
-            print("Skipping meandering. " + ", ".join(failures))
-
-        return trigger
-
     def __init__(self, character):
         super().__init__(character)
         self.start_duration = 1.0

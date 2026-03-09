@@ -19,19 +19,6 @@ class NappingBehavior(BaseBehavior):
 
     NAME = "napping"
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.energy < 60
-
-        if not trigger:
-            print("Skipping napping. Energy: %6.4f" % context.energy)
-
-        return trigger
-    
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(10, max(10, context.energy * 2))
-
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": 22,

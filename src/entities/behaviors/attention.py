@@ -46,10 +46,6 @@ class AttentionBehavior(BaseBehavior):
 
     NAME = "attention"
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(2, max(2, (100 - context.curiosity) * 0.1))
-
     def __init__(self, character):
         """Initialize the attention behavior.
 

@@ -15,19 +15,6 @@ class StretchingBehavior(BaseBehavior):
 
     NAME = "stretching"
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.comfort < 55
-
-        if not trigger:
-            print("Skipping stretching. Comfort: %6.2f" % context.comfort)
-
-        return trigger
-    
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(10, max(10, context.comfort))
-
     COMPLETION_BONUS = {
         "comfort": 3,
     }

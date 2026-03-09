@@ -24,20 +24,6 @@ class StartledBehavior(BaseBehavior):
 
     NAME = "startled"
 
-    @classmethod
-    def can_trigger(cls, context):
-        p = 0.15 * (1 - context.courage / 100)
-        trigger = random.random() < p
-
-        if not trigger:
-            print("Skipping startled. p=%.3f, Courage %6.4f" % (p, context.courage))
-
-        return trigger
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(20, max(20, context.courage * 1.2))
-
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": -1.5,

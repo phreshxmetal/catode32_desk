@@ -85,14 +85,6 @@ class PlayingBehavior(BaseBehavior):
 
     NAME = "playing"
 
-    @classmethod
-    def can_trigger(cls, context):
-        return context.playfulness >= 40
-
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(100 - context.playfulness * 1.5, context.playfulness * 1.5)
-
     def get_completion_bonus(self, context):
         return dict(VARIANTS[self._variant].get("stats", {}))
 

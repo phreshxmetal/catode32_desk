@@ -41,10 +41,6 @@ class SulkingBehavior(BaseBehavior):
         "courage": -0.2,
     }
 
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(10, max(20, (context.fulfillment + context.affection) * 0.45))
-
     def __init__(self, character):
         super().__init__(character)
         self.settle_duration = 1.0

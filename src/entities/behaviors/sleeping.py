@@ -16,19 +16,6 @@ class SleepingBehavior(BaseBehavior):
 
     NAME = "sleeping"
 
-    @classmethod
-    def can_trigger(cls, context):
-        trigger = context.energy < 40
-
-        if not trigger:
-            print("Skipping sleeping. Energy: %6.4f" % context.energy)
-
-        return trigger
-    
-    @classmethod
-    def get_priority(cls, context):
-        return random.uniform(5, max(5, context.energy * 1.5))
-
     COMPLETION_BONUS = {
         # Rapid changers
         "energy": 35,
