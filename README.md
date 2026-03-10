@@ -183,6 +183,10 @@ If you see `mpremote.transport.TransportError: could not enter raw repl` when ru
 
 **To fix this:**
 
+Either press A + B while `./dev.sh` to interrupt the boot sequence.
+
+Or, to remove the `boot.py` file so that it doesn't activate:
+
 1. Run `mpremote` to connect to the device
 2. Press **Ctrl+C** to interrupt the running game
 3. Press **Ctrl+B** to exit raw REPL and enter friendly REPL
@@ -194,9 +198,6 @@ If you see `mpremote.transport.TransportError: could not enter raw repl` when ru
 5. Press **Ctrl+X** to exit mpremote
 
 Now `./dev.sh` should work again.
-
-> [!TIP]
-> During development, don't keep `boot.py` on the device. Only run `./upload.sh` when you need standalone operation (battery-powered, showing friends, etc.). When you're done and want to return to development, remove `boot.py` using the steps above.
 
 ## Controls
 

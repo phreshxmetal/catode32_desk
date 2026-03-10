@@ -87,24 +87,24 @@ echo "  (keeping boot.py and lib/ directory for safety)"
 
 # Function to recursively delete files and directories
 clean_device() {
-    # Get list of all items in root
+    # mpremote fs ls / format: "       NNN name" for files, "       0 name/" for directories
+    # The header line "ls :/" does not match the numeric prefix pattern and is skipped.
     mp fs ls / | while read -r line; do
-        # Parse the ls output (format: "size filename" or "directory/")
         if [[ $line =~ ^[0-9]+[[:space:]]+(.+)$ ]]; then
-            # It's a file
-            filename="${BASH_REMATCH[1]}"
-            # Skip boot.py (system file) and main.py might be running
-            if [[ "$filename" != "boot.py" ]] && [[ "$filename" != "webrepl_cfg.py" ]]; then
-                echo "    Removing file: /$filename"
-                mp fs rm "/$filename" 2>/dev/null || true
-            fi
-        elif [[ $line =~ ^(.+)\/$ ]]; then
-            # It's a directory
-            dirname="${BASH_REMATCH[1]}"
-            # Skip lib directory (contains installed packages)
-            if [[ "$dirname" != "lib" ]]; then
-                echo "    Removing directory: /$dirname/"
-                mp fs rm -r "/$dirname" 2>/dev/null || true
+            name="${BASH_REMATCH[1]}"
+            if [[ $name == */ ]]; then
+                # It's a directory (trailing slash)
+                dirname="${name%/}"
+                if [[ "$dirname" != "lib" ]]; then
+                    echo "    Removing directory: /$dirname/"
+                    mp fs rm -r "/$dirname" 2>/dev/null || true
+                fi
+            else
+                # It's a file
+                if [[ "$name" != "boot.py" ]] && [[ "$name" != "webrepl_cfg.py" ]]; then
+                    echo "    Removing file: /$name"
+                    mp fs rm "/$name" 2>/dev/null || true
+                fi
             fi
         fi
     done
