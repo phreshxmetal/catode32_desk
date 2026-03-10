@@ -71,7 +71,7 @@ class NormalScene(Scene):
         self.context.scene_x_max = 182
 
         # Create character with context for behavior management
-        self.character = CharacterEntity(100, 63, context=self.context)
+        self.character = CharacterEntity(100, 64, context=self.context)
         self.character.set_pose("sitting.forward.neutral")
 
         self.menu = Menu(self.renderer, self.input)

@@ -1,6 +1,8 @@
 """Affection behavior for kiss and pets interactions."""
 
+import math
 from entities.behaviors.base import BaseBehavior
+from assets.items import HAND
 from ui import draw_bubble
 
 
@@ -113,3 +115,18 @@ class AffectionBehavior(BaseBehavior):
         """
         if self._active and self._bubble:
             draw_bubble(renderer, self._bubble, char_x, char_y, self._progress, mirror)
+
+        if self._active and self._variant == "pets":
+            sweep_speed = 0.6
+            raw = (self._phase_timer * sweep_speed) % 2.0
+            t = raw if raw <= 1.0 else 2.0 - raw  # 0 -> 1 -> 0
+
+            arc_span = 30
+            base_height = 50
+            arc_lift = 5
+
+            offset = int(arc_span * (t - 0.5))
+            hand_x = int(char_x + offset if mirror else char_x - offset) - HAND["width"] // 2
+            hand_y = int(char_y - base_height + arc_lift * math.sin(math.pi * t))
+
+            renderer.draw_sprite_obj(HAND, hand_x, hand_y, mirror_h=mirror)
