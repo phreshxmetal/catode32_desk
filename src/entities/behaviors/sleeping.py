@@ -105,6 +105,8 @@ class SleepingBehavior(BaseBehavior):
                 self._phase = "sleeping"
                 self._phase_timer = 0.0
                 self._character.set_pose(self._sleep_pose)
+                if self._character.context:
+                    self._character.context.save_if_needed()
 
         elif self._phase == "sleeping":
             # Update progress

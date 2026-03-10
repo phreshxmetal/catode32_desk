@@ -1,3 +1,15 @@
+_SAVE_PATH = '/save.json'
+
+_STAT_KEYS = (
+    'fullness', 'energy', 'comfort', 'playfulness', 'focus',
+    'fulfillment', 'cleanliness', 'curiosity', 'sociability',
+    'intelligence', 'maturity', 'affection',
+    'fitness', 'serenity',
+    'courage', 'loyalty', 'mischievousness',
+    'zoomies_high_score', 'maze_best_time', 'time_speed',
+)
+
+
 class GameContext:
     def __init__(self):
         # Meta stat (computed from other stats)
@@ -54,6 +66,9 @@ class GameContext:
         # Scene bounds for character movement (world coordinates, set by each scene on load)
         self.scene_x_min = 10
         self.scene_x_max = 118
+
+        # Time of last save in ticks_ms; None = never saved this session
+        self.last_save_time = None
     
     def recompute_health(self):
         """Recompute health as a weighted average of contributing stats.
@@ -88,3 +103,75 @@ class GameContext:
         print("----------------------------------------------------------------")
         print("Courage:      %6.4f, Loyalty:      %6.4f, Mischievousness: %6.4f" % (self.courage, self.loyalty, self.mischievousness))
         print("----------------------------------------------------------------")
+
+    def save(self):
+        """Serialize stats to flash storage."""
+        import ujson
+        import time
+        data = {'v': 1, 'env': self.environment}
+        for key in _STAT_KEYS:
+            data[key] = getattr(self, key)
+        try:
+            with open(_SAVE_PATH, 'w') as f:
+                ujson.dump(data, f)
+            self.last_save_time = time.ticks_ms()
+            print("[Context] Saved to " + _SAVE_PATH)
+        except Exception as e:
+            print("[Context] Save failed: " + str(e))
+
+    def load(self):
+        """Load stats from flash storage. Returns True if successful."""
+        import ujson
+        try:
+            with open(_SAVE_PATH, 'r') as f:
+                data = ujson.load(f)
+            for key in _STAT_KEYS:
+                if key in data:
+                    setattr(self, key, data[key])
+            self.environment = data.get('env', {})
+            self.recompute_health()
+            print("[Context] Loaded from " + _SAVE_PATH)
+            return True
+        except Exception as e:
+            print("[Context] Load skipped: " + str(e))
+            return False
+
+    def reset(self):
+        """Reset all stats to defaults and delete save file."""
+        self.health = 50
+        self.fullness = 50
+        self.energy = 50
+        self.comfort = 50
+        self.playfulness = 50
+        self.focus = 50
+        self.fulfillment = 50
+        self.cleanliness = 50
+        self.curiosity = 50
+        self.sociability = 50
+        self.intelligence = 50
+        self.maturity = 50
+        self.affection = 50
+        self.fitness = 50
+        self.serenity = 50
+        self.courage = 50
+        self.loyalty = 50
+        self.mischievousness = 50
+        self.zoomies_high_score = 0
+        self.maze_best_time = 0
+        self.environment = {}
+        self.time_speed = 1.0
+        self.last_save_time = None
+        try:
+            import uos
+            uos.remove(_SAVE_PATH)
+            print("[Context] Save file deleted")
+        except:
+            pass
+        print("[Context] Reset to defaults")
+
+    def save_if_needed(self):
+        """Save if more than 59 minutes have passed since the last save."""
+        import time
+        if (self.last_save_time is None or
+                time.ticks_diff(time.ticks_ms(), self.last_save_time) > 59 * 60 * 1000):
+            self.save()

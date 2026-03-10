@@ -301,8 +301,13 @@ class SceneManager:
         debug_items.append(MenuItem("Stats", icon=CAT_ICON, action=('scene', 'debug_stats')))
         debug_items.append(MenuItem("Time Speed", icon=WRENCH_ICON, action=('scene', 'time_settings')))
         debug_items.append(MenuItem("Memory", icon=WRENCH_ICON, action=('scene', 'debug_memory')))
-        debug_items.append(MenuItem("Context", icon=WRENCH_ICON, action=('scene', 'debug_context')))
-        
+
+        context_save_items = []
+        context_save_items.append(MenuItem("Context", icon=WRENCH_ICON, action=('scene', 'debug_context')))
+        context_save_items.append(MenuItem("Save now", icon=WRENCH_ICON, action=('context', 'save'), confirm="Save pet stats to flash?"))
+        context_save_items.append(MenuItem("Reset stats", icon=WRENCH_ICON, action=('context', 'reset'), confirm="Reset all stats to defaults?"))
+        debug_items.append(MenuItem("Context", icon=WRENCH_ICON, submenu=context_save_items))
+
         items.append(MenuItem("Debug", icon=WRENCH_ICON, submenu=debug_items))
 
         return items
@@ -319,6 +324,11 @@ class SceneManager:
             scene_class = self._get_scene_class(scene_name)
             if scene_class:
                 self.change_scene(scene_class)
+        elif action_type == 'context':
+            if action[1] == 'save':
+                self.context.save()
+            elif action[1] == 'reset':
+                self.context.reset()
 
     def unload_all(self):
         """Unload all cached scenes - call this on shutdown"""

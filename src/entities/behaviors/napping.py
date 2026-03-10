@@ -87,6 +87,8 @@ class NappingBehavior(BaseBehavior):
                 self._phase = "napping"
                 self._phase_timer = 0.0
                 self._character.set_pose(self._nap_pose)
+                if self._character.context:
+                    self._character.context.save_if_needed()
 
         elif self._phase == "napping":
             self._progress = min(1.0, self._phase_timer / self.nap_duration)

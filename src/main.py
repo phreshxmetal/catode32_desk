@@ -19,6 +19,7 @@ class Game:
 
         self.input = InputHandler()
         self.context = GameContext()
+        self.context.load()
 
         # Setup the scene manager (imports all scenes during init)
         self.scene_manager = SceneManager(
