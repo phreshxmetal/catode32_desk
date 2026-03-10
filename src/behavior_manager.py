@@ -52,20 +52,8 @@ class BehaviorManager:
         'sulking', 'mischief', 'hiding', 'lounging', 'startled',
     )
 
-    # Size of the heap reservation kept between behavior loads.
-    # Freed immediately before __import__ to guarantee a contiguous block large
-    # enough for any behavior module; re-allocated right after so the slot is
-    # ready for the next load.  Tune upward if 'max new split' still shrinks
-    # after many behavior cycles (measure with micropython.mem_info(1)).
-    _RESERVATION_SIZE = 12288  # 12 KB
-
     def __init__(self, character):
         self._character = character
-        try:
-            self._reservation = bytearray(self._RESERVATION_SIZE)
-        except MemoryError:
-            print("[BehaviorManager] Warning: could not allocate reservation buffer")
-            self._reservation = None
 
     # ------------------------------------------------------------------
     # Public API
@@ -121,21 +109,11 @@ class BehaviorManager:
             kwargs = {}
         module_path, class_name = self._REGISTRY[name]
 
-        # Free reservation to guarantee a large contiguous block for __import__
-        self._reservation = None
-        gc.collect()
-
         mod = __import__(module_path, None, None, [class_name])
         cls = getattr(mod, class_name)
         behavior = cls(self._character)
         self._character.current_behavior = behavior
         behavior.start(**kwargs)
-
-        # Re-claim the reservation slot for the next load
-        try:
-            self._reservation = bytearray(self._RESERVATION_SIZE)
-        except MemoryError:
-            self._reservation = None
 
     def _unload_module(self, module_path):
         """Remove a behavior module from sys.modules and trigger GC.
