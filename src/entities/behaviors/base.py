@@ -99,7 +99,6 @@ class BaseBehavior:
         if self._active:
             return
 
-        print("")
         print(f"[Behavior started] {self.NAME}")
 
         self._active = True

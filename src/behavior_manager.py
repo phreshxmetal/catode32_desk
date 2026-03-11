@@ -104,7 +104,7 @@ class BehaviorManager:
     def _load_and_start(self, name, **kwargs):
         """Load a behavior module, instantiate it, and start it."""
         if name not in self._REGISTRY:
-            print(f"[BehaviorManager] Unknown behavior: {name}, falling back to idle")
+            print(f"Unknown behavior: {name}, falling back to idle")
             name = 'idle'
             kwargs = {}
         module_path, class_name = self._REGISTRY[name]
@@ -122,7 +122,6 @@ class BehaviorManager:
         stack's frame reference keeps the code object alive until return.
         """
         if module_path in sys.modules:
-            print(f"[BehaviorManager] Unloading {module_path}")
             del sys.modules[module_path]
             gc.collect()
 
