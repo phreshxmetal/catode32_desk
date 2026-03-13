@@ -117,7 +117,18 @@ class OutsideScene(Scene):
         self.sky.update(dt)
 
         # Update character
+        prev_x = self.character.x
         self.character.update(dt)
+
+        # Auto-pan only when pet moved and d-pad isn't held
+        if not (self.input.is_pressed('left') or self.input.is_pressed('right')):
+            if int(prev_x) != int(self.character.x):
+                margin = 32
+                screen_x = int(self.character.x) - int(self.environment.camera_x)
+                if screen_x < margin:
+                    self.environment.set_camera(int(self.character.x) - margin)
+                elif screen_x > config.DISPLAY_WIDTH - margin:
+                    self.environment.set_camera(int(self.character.x) - (config.DISPLAY_WIDTH - margin))
 
         # Update environment entities (butterflies)
         self.environment.update(dt)
