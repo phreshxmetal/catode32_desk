@@ -5,6 +5,7 @@ from input import InputHandler
 from renderer import Renderer
 from context import GameContext
 from scene_manager import SceneManager
+from weather_system import WeatherSystem
 from assets.boot_img import STRETCH_CAT1
 
 class Game:
@@ -29,6 +30,8 @@ class Game:
         )
 
         self.scene_manager.change_scene_by_name('normal')
+
+        self.weather_system = WeatherSystem()
 
         # Prepare to start rendering
         self.last_frame_time = time.ticks_ms()
@@ -80,8 +83,13 @@ class Game:
             self._time_accumulator -= mins
             env = self.context.environment
             total_minutes = env.get('time_minutes', 0) + mins
-            env['time_hours'] = (env.get('time_hours', 12) + total_minutes // 60) % 24
+            old_hours = env.get('time_hours', 12)
+            new_hours_raw = old_hours + total_minutes // 60
+            env['time_hours'] = new_hours_raw % 24
             env['time_minutes'] = total_minutes % 60
+            if new_hours_raw >= 24:
+                env['day_number'] = env.get('day_number', 0) + (new_hours_raw // 24)
+            self.weather_system.update(mins, env)
 
     def _show_boot_screen(self):
         self.renderer.clear()

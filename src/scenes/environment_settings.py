@@ -15,6 +15,11 @@ class EnvironmentSettingsScene(Scene):
         env = getattr(self.context, 'environment', {})
         items = [
             SettingItem(
+                "Day", "day_number",
+                min_val=0, max_val=9999, step=1,
+                value=env.get('day_number', 0)
+            ),
+            SettingItem(
                 "Hour", "time_hours",
                 min_val=0, max_val=23, step=1,
                 value=env.get('time_hours', 12)
@@ -49,6 +54,7 @@ class EnvironmentSettingsScene(Scene):
     def handle_input(self):
         result = self.settings.handle_input()
         if result is not None:
-            self.context.environment = result
+            self.context.environment.update(result)
+            self.context.environment['weather_timer'] = 60.0
             return ('change_scene', 'normal')
         return None

@@ -26,6 +26,7 @@ class NormalScene(Scene):
         self.character = None
 
         self.sky = SkyRenderer()
+        self._last_weather = None
 
     def load(self):
         super().load()
@@ -92,6 +93,7 @@ class NormalScene(Scene):
         env_settings = getattr(self.context, 'environment', {})
         self.sky.configure(env_settings, world_width=self.environment.world_width)
         self.sky.add_to_environment(self.environment, LAYER_BACKGROUND)
+        self._last_weather = env_settings.get('weather', 'Clear')
         self.environment.add_custom_draw(LAYER_MIDGROUND, self.sky.make_precipitation_drawer(0.3, 0))
         self.environment.add_custom_draw(LAYER_MIDGROUND, self._draw_window)
 
@@ -109,6 +111,13 @@ class NormalScene(Scene):
     def update(self, dt):
         env = self.context.environment
         self.sky.set_time(env.get('time_hours', 12), env.get('time_minutes', 0))
+
+        # Re-enter if weather changed so clouds, precipitation, etc. all rebuild
+        current_weather = env.get('weather', 'Clear')
+        if current_weather != self._last_weather:
+            self.exit()
+            self.enter()
+
         self.sky.update(dt)
 
         # Update character

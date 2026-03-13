@@ -77,6 +77,7 @@ class SceneManager:
             'debug_stats': ('scenes.debug_stats', 'DebugStatsScene'),
             'environment_settings': ('scenes.environment_settings', 'EnvironmentSettingsScene'),
             'time_settings': ('scenes.time_settings', 'TimeSettingsScene'),
+            'forecast': ('scenes.forecast', 'ForecastScene'),
         }
 
     def _get_scene_class(self, name):
@@ -280,6 +281,9 @@ class SceneManager:
 
         # Stats page
         items.append(MenuItem("Pet stats", icon=STATS_ICON, action=('scene', 'stats')))
+
+        # Weather forecast
+        items.append(MenuItem("Forecast", icon=SUN_ICON, action=('scene', 'forecast')))
 
         # Location options
         location_items = []
