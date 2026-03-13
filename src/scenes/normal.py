@@ -8,10 +8,11 @@ from assets.furniture import BOOKSHELF
 from assets.nature import PLANTER1, PLANT1, PLANT3
 from assets.items import FISH1, BOX_SMALL_1, PLANTER_SMALL_1, FOOD_BOWL, TREAT_PILE
 from sky import SkyRenderer
+from clock import ClockWidget
 
 
 class NormalScene(Scene):
-    MODULES_TO_KEEP = ['assets.furniture', 'assets.nature', 'sky']
+    MODULES_TO_KEEP = ['assets.furniture', 'assets.nature', 'sky', 'clock']
 
     # Window position and size (world x, screen y, width, height)
     WINDOW_WORLD_X = 100
@@ -27,6 +28,7 @@ class NormalScene(Scene):
 
         self.sky = SkyRenderer()
         self._last_weather = None
+        self.clock = None
 
     def load(self):
         super().load()
@@ -84,6 +86,8 @@ class NormalScene(Scene):
         self.character = CharacterEntity(64, 63, context=self.context)
         self.character.set_pose("sitting.forward.neutral")
 
+        self.clock = ClockWidget(world_x=36, world_y=0)
+
         self.menu = Menu(self.renderer, self.input)
 
     def unload(self):
@@ -96,6 +100,7 @@ class NormalScene(Scene):
         self._last_weather = env_settings.get('weather', 'Clear')
         self.environment.add_custom_draw(LAYER_MIDGROUND, self.sky.make_precipitation_drawer(0.3, 0))
         self.environment.add_custom_draw(LAYER_MIDGROUND, self._draw_window)
+        self.environment.add_custom_draw(LAYER_MIDGROUND, self.clock.draw)
 
         # Restart idle if behavior was stopped when scene was cached
         if self.character and not self.character.current_behavior.active:
@@ -110,7 +115,10 @@ class NormalScene(Scene):
 
     def update(self, dt):
         env = self.context.environment
-        self.sky.set_time(env.get('time_hours', 12), env.get('time_minutes', 0))
+        hours = env.get('time_hours', 12)
+        minutes = env.get('time_minutes', 0)
+        self.sky.set_time(hours, minutes)
+        self.clock.set_time(hours, minutes)
 
         # Re-enter if weather changed so clouds, precipitation, etc. all rebuild
         current_weather = env.get('weather', 'Clear')
