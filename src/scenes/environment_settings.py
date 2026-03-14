@@ -16,7 +16,7 @@ class EnvironmentSettingsScene(Scene):
         items = [
             SettingItem(
                 "Day", "day_number",
-                min_val=0, max_val=999999, step=1,
+                min_val=0, max_val=9999999, step=1,
                 value=env.get('day_number', 0)
             ),
             SettingItem(
