@@ -106,6 +106,23 @@ class BehaviorManager:
     # Module lifecycle
     # ------------------------------------------------------------------
 
+    def resume_prior_behavior(self):
+        """Restart the prior behavior on scene re-entry, or idle if it was an interaction.
+
+        Interaction behaviors (triggered by the player, not autonomous) should not
+        be resumed when re-entering a scene — fall back to idle instead.
+        """
+        _INTERACTION_BEHAVIORS = frozenset((
+            'affection', 'attention', 'being_groomed', 'eating',
+            'playing', 'gift_bringing', 'chattering',
+        ))
+        ctx = self._character.context
+        prior = ctx.current_behavior_name if ctx else None
+        if prior and prior not in _INTERACTION_BEHAVIORS:
+            self.trigger(prior)
+        else:
+            self.trigger('idle')
+
     def _load_and_start(self, name, **kwargs):
         """Load a behavior module, instantiate it, and start it."""
         if name not in self._REGISTRY:
@@ -113,6 +130,10 @@ class BehaviorManager:
             name = 'idle'
             kwargs = {}
         module_path, class_name = self._REGISTRY[name]
+
+        ctx = self._character.context
+        if ctx:
+            ctx.current_behavior_name = name
 
         mod = __import__(module_path, None, None, [class_name])
         cls = getattr(mod, class_name)

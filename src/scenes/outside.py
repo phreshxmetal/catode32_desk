@@ -101,9 +101,9 @@ class OutsideScene(Scene):
         self.environment.add_custom_draw(LAYER_MIDGROUND, self.sky.make_precipitation_drawer(0.6, 1))
         self.environment.add_custom_draw(LAYER_FOREGROUND, self.sky.make_precipitation_drawer(1.0, 2))
 
-        # Restart idle if behavior was stopped when scene was cached
+        # Restart prior behavior (or idle) if behavior was stopped when scene was cached
         if self.character and not self.character.current_behavior.active:
-            self.character.behavior_manager.trigger('idle')
+            self.character.behavior_manager.resume_prior_behavior()
 
     def exit(self):
         # Stop active behavior so its module is unloaded while scene is cached

@@ -72,6 +72,9 @@ class GameContext:
 
         # Recent completed behavior names for loop prevention (most recent first, not persisted)
         self.recent_behaviors = []
+
+        # Name of the most recently started behavior (not persisted, used to restore on scene re-entry)
+        self.current_behavior_name = None
     
     def recompute_health(self):
         """Recompute health as a weighted average of contributing stats.
@@ -177,6 +180,7 @@ class GameContext:
         self.time_speed = 1.0
         self.last_save_time = None
         self.recent_behaviors = []
+        self.current_behavior_name = None
         try:
             import uos
             uos.remove(_SAVE_PATH)
