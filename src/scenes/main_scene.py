@@ -26,6 +26,7 @@ class MainScene(Scene):
     """
 
     SCENE_NAME = None  # override in subclass
+    ENTRY_X = 64      # character x position on scene entry (cached or fresh)
 
     def __init__(self, context, renderer, input):
         super().__init__(context, renderer, input)
@@ -49,6 +50,8 @@ class MainScene(Scene):
     def enter(self):
         if self.SCENE_NAME:
             self.context.last_main_scene = self.SCENE_NAME
+        if self.character:
+            self.character.x = self.ENTRY_X
         self.on_enter()
         if self.character and not self.character.current_behavior.active:
             self.character.behavior_manager.resume_prior_behavior()
