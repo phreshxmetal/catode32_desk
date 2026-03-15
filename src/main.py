@@ -33,6 +33,8 @@ class Game:
 
         self.weather_system = WeatherSystem()
 
+        self._update_moon_phase()
+
         # Prepare to start rendering
         self.last_frame_time = time.ticks_ms()
         self._time_accumulator = 0.0
@@ -88,12 +90,14 @@ class Game:
             env['time_hours'] = new_hours_raw % 24
             env['time_minutes'] = total_minutes % 60
             if new_hours_raw >= 24:
-                new_day = env.get('day_number', 0) + (new_hours_raw // 24)
-                env['day_number'] = new_day
-                _MOON_PHASES = ("New", "Wax Cres", "1st Qtr", "Wax Gib",
-                                "Full", "Wan Gib", "3rd Qtr", "Wan Cres")
-                env['moon_phase'] = _MOON_PHASES[(new_day // 6 + 2) % 8]
+                env['day_number'] = env.get('day_number', 0) + (new_hours_raw // 24)
+                self._update_moon_phase()
             self.weather_system.update(mins, env)
+
+    def _update_moon_phase(self):
+        _MOON_PHASES = ("New", "Wax Cres", "1st Qtr", "Wax Gib", "Full", "Wan Gib", "3rd Qtr", "Wan Cres")
+        day = self.context.environment.get('day_number', 0)
+        self.context.environment['moon_phase'] = _MOON_PHASES[(day // 6 + 2) % 8]
 
     def _show_boot_screen(self):
         self.renderer.clear()
@@ -117,7 +121,6 @@ def main():
         print(f"==! Error: {e}")
         import sys
         sys.print_exception(e)
-
 
 if __name__ == "__main__":
     main()
