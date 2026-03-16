@@ -51,6 +51,16 @@ class Game:
 
             # Handle inputs
             self.scene_manager.handle_input()
+
+            
+            # Deep sleep on hold MENU1 + MENU2
+            if self.input.are_held(['menu1', 'menu2'], 2000):
+                self.renderer.clear()
+                self.renderer.show()
+                import machine, esp32
+                wake_pin = machine.Pin(config.BTN_A, machine.Pin.IN, machine.Pin.PULL_UP)
+                esp32.wake_on_gpio(wake_pin, esp32.WAKEUP_ALL_LOW)
+                machine.deepsleep()
             
             dt = delta_time / 1000.0 * self.context.time_speed
             self._advance_time(dt)

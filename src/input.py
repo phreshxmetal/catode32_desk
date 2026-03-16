@@ -91,7 +91,19 @@ class InputHandler:
     def any_button_pressed(self):
         """Check if any button is currently pressed"""
         return any(self.is_pressed(btn) for btn in self.buttons)
-    
+
+    def are_held(self, button_names, duration_ms=2000):
+        """Check if all specified buttons have been held for duration_ms"""
+        current_time = time.ticks_ms()
+        for name in button_names:
+            if not self.is_pressed(name):
+                self._hold_start = None
+                return False
+        if not hasattr(self, '_hold_start') or self._hold_start is None:
+            self._hold_start = current_time
+            return False
+        return time.ticks_diff(current_time, self._hold_start) >= duration_ms
+
     def get_pressed_buttons(self):
         """Get list of all currently pressed button names"""
         return [name for name in self.buttons if self.is_pressed(name)]

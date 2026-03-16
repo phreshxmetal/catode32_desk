@@ -80,7 +80,7 @@ find "$SRC_DIR" -name "*.py" | while read -r pyfile; do
     MPY_PATH="$BUILD_DIR/${REL_PATH%.py}.mpy"
     mkdir -p "$(dirname "$MPY_PATH")"
     echo -n "  Compiling $REL_PATH..."
-    if mpy-cross -march=xtensawin "$pyfile" -o "$MPY_PATH" 2>/dev/null; then
+    if mpy-cross -march=rv32imc "$pyfile" -o "$MPY_PATH" 2>/dev/null; then
         echo -e " ${GREEN}✓${NC}"
     else
         echo -e " ${RED}✗${NC}"
@@ -136,10 +136,14 @@ find $BUILD_DIR -type f -name "*.mpy" | while read -r file; do
     REL_PATH="${file#$BUILD_DIR/}"
     echo -n "  [$CURRENT/$TOTAL_FILES] Uploading $REL_PATH..."
 
-    # Create directory if needed
+    # Create directory if needed (including nested)
     DIR_PATH=$(dirname "/$REL_PATH")
     if [ "$DIR_PATH" != "/" ]; then
-        mp fs mkdir "$DIR_PATH" 2>/dev/null || true
+        PARTIAL=""
+        for PART in $(echo "$DIR_PATH" | tr '/' ' '); do
+            PARTIAL="$PARTIAL/$PART"
+            mp fs mkdir "$PARTIAL" 2>/dev/null || true
+        done
     fi
 
     # Upload file

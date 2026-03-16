@@ -48,6 +48,21 @@ class Renderer:
     
     def show(self):
         """Update the physical display with buffer contents"""
+        buf = self.display.buffer
+        pages = 8
+        cols = 128
+        rotated = bytearray(len(buf))
+        for page in range(pages):
+            for col in range(cols):
+                src = page * cols + col
+                dst = (pages - 1 - page) * cols + (cols - 1 - col)
+                b = buf[src]
+                # Reverse bits in byte
+                b = (b & 0xF0) >> 4 | (b & 0x0F) << 4
+                b = (b & 0xCC) >> 2 | (b & 0x33) << 2
+                b = (b & 0xAA) >> 1 | (b & 0x55) << 1
+                rotated[dst] = b
+        buf[:] = rotated
         self.display.show()
 
     def invert(self, state):
